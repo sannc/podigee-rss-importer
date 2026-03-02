@@ -1,0 +1,300 @@
+# Copyright (C) 2024 Podigee
+# This file is distributed under the GPL-2.0+ license.
+msgid ""
+msgstr ""
+"Project-Id-Version: Podigee RSS Importer 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/podigee/podigee-rss-importer/issues\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-01-01T00:00:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.x\n"
+"X-Domain: podigee-rss-importer\n"
+
+#. Plugin Name of the plugin
+msgid "Podigee RSS Importer"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://github.com/podigee/podigee-rss-importer"
+msgstr ""
+
+#. Description of the plugin
+msgid "Importiert Podigee-Podcast-RSS-Feeds als WordPress-Posts. Unterstützt mehrere Feeds, konfigurierbar pro Feed."
+msgstr ""
+
+#: includes/class-cron-manager.php
+msgid "Einmal pro Woche"
+msgstr ""
+
+#: includes/class-feed-manager.php
+#: includes/class-importer.php
+msgid "Feed nicht gefunden."
+msgstr ""
+
+#: includes/class-importer.php
+msgid "Fehler bei \"%1$s\": %2$s"
+msgstr ""
+
+#: includes/class-rss-parser.php
+msgid "Feed konnte nicht geladen werden: %s"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Podigee Importer"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Feeds"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Episode importieren"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Importieren"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Episoden werden geladen…"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Importiere…"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Alle auswählen"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Keine auswählen"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Nur neue auswählen"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "importiert"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "neu"
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Keine Episoden gefunden."
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Bitte mindestens eine Episode auswählen."
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Fehler beim Laden der Episoden."
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Fehler beim Importieren."
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Zugriff verweigert."
+msgstr ""
+
+#: admin/class-admin.php
+msgid "Keine Feed-ID angegeben."
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Podigee Feeds"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Feed hinzufügen"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Feed gespeichert."
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Feed gelöscht."
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Noch keine Feeds konfiguriert."
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Jetzt Feed hinzufügen"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Name"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Feed-URL"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Post-Type"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Status"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Cron"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Letzte Ausführung"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Aktionen"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Veröffentlicht"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Entwurf"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Deaktiviert"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Stündlich"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Zweimal täglich"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Täglich"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Wöchentlich"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Noch nie"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Bearbeiten"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Feed wirklich löschen?"
+msgstr ""
+
+#: admin/views/feeds-list.php
+msgid "Löschen"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Feed hinzufügen"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Feed bearbeiten"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Zurück zur Übersicht"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Anzeigename für diesen Feed (nur intern)"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Vollständige URL des Podigee RSS-Feeds"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Post-Type"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Post-Status"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Optionen"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Episodendatum als Post-Datum verwenden"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Bereits importierte Posts aktualisieren"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Automatischer Import"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Kategorien"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Tags"
+msgstr ""
+
+#: admin/views/feed-edit.php
+msgid "Änderungen speichern"
+msgstr ""
+
+#: admin/views/import.php
+msgid "Episoden importieren"
+msgstr ""
+
+#: admin/views/import.php
+msgid "Noch kein Feed konfiguriert."
+msgstr ""
+
+#: admin/views/import.php
+msgid "Feed wählen:"
+msgstr ""
+
+#: admin/views/import.php
+msgid "– Feed auswählen –"
+msgstr ""
+
+#: admin/views/import.php
+msgid "Episoden laden"
+msgstr ""
+
+#: admin/views/import.php
+msgid "Nr."
+msgstr ""
+
+#: admin/views/import.php
+msgid "Titel"
+msgstr ""
+
+#: admin/views/import.php
+msgid "Datum"
+msgstr ""
+
+#: admin/views/import.php
+msgid "Ausgewählte importieren"
+msgstr ""

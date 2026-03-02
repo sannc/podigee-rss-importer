@@ -1,0 +1,140 @@
+/* Podigee RSS Importer – Admin Styles */
+
+/* -----------------------------------------------------------------------
+   Layout
+----------------------------------------------------------------------- */
+.podigee-wrap {
+	max-width: 1200px;
+}
+
+/* -----------------------------------------------------------------------
+   Import controls
+----------------------------------------------------------------------- */
+.podigee-import-controls {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin-top: 10px;
+}
+
+.podigee-import-controls select {
+	min-width: 360px;
+}
+
+.podigee-bulk-actions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+/* -----------------------------------------------------------------------
+   Episodes table
+----------------------------------------------------------------------- */
+.podigee-episodes-table .check-column {
+	width: 40px;
+	padding: 8px 10px !important;
+	text-align: center !important;
+}
+
+.podigee-episodes-table td,
+.podigee-episodes-table th {
+	vertical-align: middle;
+}
+
+.podigee-episodes-table tr.is-imported td {
+	color: #777;
+}
+
+/* -----------------------------------------------------------------------
+   Status badges
+----------------------------------------------------------------------- */
+.podigee-badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 3px;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+
+.podigee-badge--publish {
+	background: #d4edda;
+	color: #155724;
+}
+
+.podigee-badge--draft {
+	background: #fff3cd;
+	color: #856404;
+}
+
+.podigee-badge--new {
+	background: #cce5ff;
+	color: #004085;
+}
+
+.podigee-badge--imported {
+	background: #e2e3e5;
+	color: #383d41;
+}
+
+/* -----------------------------------------------------------------------
+   Feeds list
+----------------------------------------------------------------------- */
+.podigee-feeds-table .podigee-actions {
+	width: 140px;
+	white-space: normal;
+}
+
+.podigee-feeds-table .podigee-actions a,
+.podigee-feeds-table .podigee-actions .podigee-delete-btn {
+	display: inline-block;
+	margin: 1px 0;
+}
+
+.podigee-delete-btn {
+	color: #b32d2e;
+	text-decoration: none;
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	font-size: inherit;
+}
+
+.podigee-delete-btn:hover {
+	color: #8b0000;
+	text-decoration: underline;
+}
+
+/* -----------------------------------------------------------------------
+   Term lists (categories / tags in feed edit)
+----------------------------------------------------------------------- */
+.podigee-term-list {
+	max-height: 180px;
+	overflow-y: auto;
+	border: 1px solid #ddd;
+	padding: 8px 12px;
+	border-radius: 3px;
+	background: #fafafa;
+}
+
+.podigee-term-list label {
+	display: block;
+	margin-bottom: 4px;
+}
+
+/* -----------------------------------------------------------------------
+   Import result box
+----------------------------------------------------------------------- */
+#podigee-import-result .notice {
+	display: block;
+	margin: 0;
+}
+
+#podigee-import-result ul {
+	list-style: disc;
+	padding-left: 1.5em;
+	margin-top: 6px;
+}
