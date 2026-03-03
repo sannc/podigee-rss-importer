@@ -71,7 +71,7 @@ class Podigee_Feed_Manager {
 			}
 		}
 
-		update_option( self::OPTION_KEY, $feeds );
+		update_option( self::OPTION_KEY, $feeds, false );
 		return $feed;
 	}
 
@@ -91,7 +91,7 @@ class Podigee_Feed_Manager {
 			}
 		}
 		unset( $feed );
-		update_option( self::OPTION_KEY, $feeds );
+		update_option( self::OPTION_KEY, $feeds, false );
 	}
 
 	/**
@@ -110,7 +110,7 @@ class Podigee_Feed_Manager {
 			}
 		}
 		unset( $feed );
-		update_option( self::OPTION_KEY, $feeds );
+		update_option( self::OPTION_KEY, $feeds, false );
 	}
 
 	/**
@@ -138,7 +138,7 @@ class Podigee_Feed_Manager {
 			return false; // Not found.
 		}
 
-		update_option( self::OPTION_KEY, array_values( $new ) );
+		update_option( self::OPTION_KEY, array_values( $new ), false );
 		return true;
 	}
 

@@ -16,14 +16,14 @@ class Podigee_RSS_Parser {
 	 *
 	 * @param string $url Feed URL.
 	 * @return array<int, array> Array of episode data arrays, newest first.
-	 * @throws RuntimeException On fetch/parse failure.
+	 * @throws \RuntimeException On fetch/parse failure.
 	 */
 	public function parse( string $url ): array {
 		// fetch_feed() returns WP_Error or SimplePie instance.
 		$feed = fetch_feed( esc_url_raw( $url ) );
 
 		if ( is_wp_error( $feed ) ) {
-			throw new RuntimeException(
+			throw new \RuntimeException(
 				sprintf(
 					/* translators: %s: error message */
 					__( 'Feed konnte nicht geladen werden: %s', 'podigee-rss-importer' ),
@@ -62,7 +62,7 @@ class Podigee_RSS_Parser {
 		if ( empty( $content ) ) {
 			$content = $item->get_description( true );
 		}
-		$content = wp_kses_post( $content ?? '' );
+		$content = $content ?? '';
 
 		// Publication date as Unix timestamp.
 		$pub_date = $item->get_gmdate( 'U' );
@@ -111,6 +111,14 @@ class Podigee_RSS_Parser {
 			}
 		}
 
+		// --- iTunes keywords ---
+		$keywords      = [];
+		$keywords_node = $item->get_item_tags( $itunes_ns, 'keywords' );
+		if ( ! empty( $keywords_node[0]['data'] ) ) {
+			$keywords = array_map( 'trim', explode( ',', $keywords_node[0]['data'] ) );
+			$keywords = array_filter( $keywords );
+		}
+
 		// --- Podigee embed URL ---
 		// Podigee puts the embed player URL in <atom:link rel="payment"> or
 		// as an <itunes:subtitle> reference. We look for it in atom:link tags.
@@ -141,6 +149,7 @@ class Podigee_RSS_Parser {
 			'image_url'      => $itunes_image,
 			'episode_number' => $episode_number,
 			'season_number'  => $season_number,
+			'keywords'       => $keywords,
 			'embed_url'      => $embed_url,
 			'permalink'      => esc_url_raw( $item->get_permalink() ?? '' ),
 		];

@@ -115,11 +115,17 @@ class Podigee_Admin {
 				'new'             => __( 'neu', 'podigee-rss-importer' ),
 				'ignore'          => __( 'Ignorieren', 'podigee-rss-importer' ),
 				'unignore'        => __( 'Reaktivieren', 'podigee-rss-importer' ),
+				'importSingle'    => __( 'Importieren', 'podigee-rss-importer' ),
 				'noEpisodes'      => __( 'Keine Episoden gefunden.', 'podigee-rss-importer' ),
 				'noSelection'     => __( 'Bitte mindestens eine Episode auswählen.', 'podigee-rss-importer' ),
 				'errorFetch'      => __( 'Fehler beim Laden der Episoden.', 'podigee-rss-importer' ),
 				'errorImport'     => __( 'Fehler beim Importieren.', 'podigee-rss-importer' ),
 				'errorIgnore'     => __( 'Fehler beim Ignorieren.', 'podigee-rss-importer' ),
+				'resultDone'      => __( 'Import abgeschlossen', 'podigee-rss-importer' ),
+				'resultImported'  => __( 'importiert', 'podigee-rss-importer' ),
+				'resultUpdated'   => __( 'aktualisiert', 'podigee-rss-importer' ),
+				'resultSkipped'   => __( 'übersprungen', 'podigee-rss-importer' ),
+				'resultErrors'    => __( 'Fehler:', 'podigee-rss-importer' ),
 			],
 		] );
 	}

@@ -75,6 +75,10 @@ class Podigee_Post_Creator {
 			wp_set_post_tags( $post_id, array_map( 'absint', $feed['tag_ids'] ) );
 		}
 
+		if ( ! empty( $episode['keywords'] ) ) {
+			wp_set_post_tags( $post_id, array_map( 'sanitize_text_field', $episode['keywords'] ), true );
+		}
+
 		// --- Featured Image ---
 		if ( ! empty( $episode['image_url'] ) && ! has_post_thumbnail( $post_id ) ) {
 			$this->maybe_set_thumbnail( $post_id, $episode['image_url'], $episode['title'] );

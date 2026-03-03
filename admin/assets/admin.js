@@ -103,9 +103,16 @@
 				rowClass = 'is-imported';
 			}
 
-			const actionBtn = isIgnored
-				? '<button type="button" class="button button-small podigee-unignore-btn" data-guid="' + escAttr( ep.guid ) + '">' + escHtml( i18n.unignore ) + '</button>'
-				: '<button type="button" class="button button-small podigee-ignore-btn" data-guid="' + escAttr( ep.guid ) + '">' + escHtml( i18n.ignore ) + '</button>';
+			let actionBtn = '';
+			if ( isIgnored ) {
+				actionBtn = '<button type="button" class="button-link podigee-unignore-btn" data-guid="' + escAttr( ep.guid ) + '">' + escHtml( i18n.unignore ) + '</button>';
+			} else if ( isImported ) {
+				actionBtn = '';
+			} else {
+				actionBtn =
+					'<button type="button" class="button button-primary button-small podigee-import-single-btn" data-guid="' + escAttr( ep.guid ) + '">' + escHtml( i18n.importSingle || 'Importieren' ) + '</button>' +
+					' <button type="button" class="button-link podigee-ignore-btn" data-guid="' + escAttr( ep.guid ) + '">' + escHtml( i18n.ignore ) + '</button>';
+			}
 
 			const row = $(
 				'<tr class="' + escHtml( rowClass ) + '" data-guid="' + escAttr( ep.guid ) + '">' +
@@ -149,6 +156,53 @@
 		const guid   = $( this ).data( 'guid' );
 		const feedId = $( '#podigee-feed-select' ).val();
 		unignoreEpisodes( feedId, [ guid ] );
+	} );
+
+	// =========================================================================
+	// Import single episode (row button)
+	// =========================================================================
+
+	$( document ).on( 'click', '.podigee-import-single-btn', function () {
+		const $btn   = $( this );
+		const guid   = $btn.data( 'guid' );
+		const feedId = $( '#podigee-feed-select' ).val();
+		if ( ! feedId ) {
+			return;
+		}
+
+		$btn.prop( 'disabled', true ).text( i18n.importing );
+
+		$.ajax( {
+			url: podigeeAjax.ajaxUrl,
+			method: 'POST',
+			data: {
+				action:  'podigee_import_episodes',
+				nonce:   podigeeAjax.nonceImport,
+				feed_id: feedId,
+				guids:   [ guid ],
+			},
+			success: function ( response ) {
+				if ( ! response.success ) {
+					$btn.prop( 'disabled', false ).text( i18n.importSingle );
+					showError( response.data || i18n.errorImport );
+					return;
+				}
+
+				showImportResult( response.data );
+
+				// Update local cache and re-render.
+				const ep = currentEpisodes.find( function ( e ) { return e.guid === guid; } );
+				if ( ep ) {
+					ep.is_imported = true;
+					ep.existing_post_id = response.data.post_ids ? response.data.post_ids[ guid ] : null;
+				}
+				renderEpisodes( currentEpisodes );
+			},
+			error: function () {
+				$btn.prop( 'disabled', false ).text( i18n.importSingle );
+				showError( i18n.errorImport );
+			},
+		} );
 	} );
 
 	// =========================================================================
@@ -326,15 +380,15 @@
 
 	function showImportResult( data ) {
 		let html = '<div class="notice notice-success"><p>';
-		html += '<strong>' + escHtml( wp.i18n ? wp.i18n.__( 'Import abgeschlossen', 'podigee-rss-importer' ) : 'Import abgeschlossen' ) + '</strong>';
+		html += '<strong>' + escHtml( i18n.resultDone ) + '</strong>';
 		html += '</p><ul>';
-		html += '<li>' + data.imported + ' ' + escHtml( 'importiert' ) + '</li>';
-		html += '<li>' + data.updated  + ' ' + escHtml( 'aktualisiert' ) + '</li>';
-		html += '<li>' + data.skipped  + ' ' + escHtml( 'übersprungen' ) + '</li>';
+		html += '<li>' + data.imported + ' ' + escHtml( i18n.resultImported ) + '</li>';
+		html += '<li>' + data.updated  + ' ' + escHtml( i18n.resultUpdated ) + '</li>';
+		html += '<li>' + data.skipped  + ' ' + escHtml( i18n.resultSkipped ) + '</li>';
 		html += '</ul>';
 
 		if ( data.errors && data.errors.length > 0 ) {
-			html += '<p><strong>' + escHtml( 'Fehler:' ) + '</strong></p><ul>';
+			html += '<p><strong>' + escHtml( i18n.resultErrors ) + '</strong></p><ul>';
 			data.errors.forEach( function ( err ) {
 				html += '<li>' + escHtml( err ) + '</li>';
 			} );

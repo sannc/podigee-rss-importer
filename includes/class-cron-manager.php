@@ -82,11 +82,8 @@ class Podigee_Cron_Manager {
 	 * @param string $feed_id Feed UUID.
 	 */
 	public function unschedule_feed( string $feed_id ): void {
-		$hook      = self::HOOK_PREFIX . $feed_id;
-		$timestamp = wp_next_scheduled( $hook );
-		if ( $timestamp ) {
-			wp_unschedule_event( $timestamp, $hook );
-		}
+		$hook = self::HOOK_PREFIX . $feed_id;
+		wp_clear_scheduled_hook( $hook );
 	}
 
 	/**

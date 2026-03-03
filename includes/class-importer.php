@@ -29,11 +29,11 @@ class Podigee_Importer {
 	 * @return array{ imported: int, updated: int, skipped: int, errors: string[] }
 	 */
 	public function import_episodes( array $guids, array $feed_config ): array {
-		$result = [ 'imported' => 0, 'updated' => 0, 'skipped' => 0, 'errors' => [] ];
+		$result = [ 'imported' => 0, 'updated' => 0, 'skipped' => 0, 'errors' => [], 'post_ids' => [] ];
 
 		try {
 			$all_episodes = $this->parser->parse( $feed_config['url'] );
-		} catch ( RuntimeException $e ) {
+		} catch ( \RuntimeException $e ) {
 			$result['errors'][] = $e->getMessage();
 			return $result;
 		}
@@ -71,8 +71,10 @@ class Podigee_Importer {
 				);
 			} elseif ( $existing_id > 0 ) {
 				$result['updated']++;
+				$result['post_ids'][ $guid ] = $post_id;
 			} else {
 				$result['imported']++;
+				$result['post_ids'][ $guid ] = $post_id;
 			}
 		}
 
@@ -91,7 +93,7 @@ class Podigee_Importer {
 
 		try {
 			$all_episodes = $this->parser->parse( $feed_config['url'] );
-		} catch ( RuntimeException $e ) {
+		} catch ( \RuntimeException $e ) {
 			$result['errors'][] = $e->getMessage();
 			return $result;
 		}
@@ -153,7 +155,7 @@ class Podigee_Importer {
 
 		try {
 			$episodes = $this->parser->parse( $feed['url'] );
-		} catch ( RuntimeException $e ) {
+		} catch ( \RuntimeException $e ) {
 			return [ 'episodes' => [], 'error' => $e->getMessage() ];
 		}
 

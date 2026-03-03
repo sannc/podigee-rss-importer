@@ -51,7 +51,7 @@ $cron_labels = [
 					<th scope="col"><?php esc_html_e( 'Name', 'podigee-rss-importer' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'Feed-URL', 'podigee-rss-importer' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'Post-Type', 'podigee-rss-importer' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Status', 'podigee-rss-importer' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Zielstatus', 'podigee-rss-importer' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'Cron', 'podigee-rss-importer' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'Letzte Ausführung', 'podigee-rss-importer' ); ?></th>
 					<th scope="col"><?php esc_html_e( 'Aktionen', 'podigee-rss-importer' ); ?></th>
@@ -88,21 +88,25 @@ $cron_labels = [
 							<?php endif; ?>
 						</td>
 						<td class="podigee-actions">
-							<a href="<?php echo esc_url( add_query_arg( [ 'page' => 'podigee-feeds', 'action' => 'edit', 'feed_id' => $feed['id'] ], admin_url( 'admin.php' ) ) ); ?>">
-								<?php esc_html_e( 'Bearbeiten', 'podigee-rss-importer' ); ?>
-							</a>
-							<a href="<?php echo esc_url( add_query_arg( [ 'page' => 'podigee-import', 'feed_id' => $feed['id'] ], admin_url( 'admin.php' ) ) ); ?>">
+							<a href="<?php echo esc_url( add_query_arg( [ 'page' => 'podigee-import', 'feed_id' => $feed['id'] ], admin_url( 'admin.php' ) ) ); ?>"
+								class="button button-primary button-small">
 								<?php esc_html_e( 'Importieren', 'podigee-rss-importer' ); ?>
 							</a>
-							<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-								<input type="hidden" name="action" value="podigee_delete_feed">
-								<input type="hidden" name="feed_id" value="<?php echo esc_attr( $feed['id'] ); ?>">
-								<?php wp_nonce_field( 'podigee_delete_feed_' . $feed['id'], 'podigee_nonce' ); ?>
-								<button type="submit" class="button-link podigee-delete-btn"
-									onclick="return confirm('<?php esc_attr_e( 'Feed wirklich löschen?', 'podigee-rss-importer' ); ?>');">
-									<?php esc_html_e( 'Löschen', 'podigee-rss-importer' ); ?>
-								</button>
-							</form>
+							<span class="podigee-actions__secondary">
+								<a href="<?php echo esc_url( add_query_arg( [ 'page' => 'podigee-feeds', 'action' => 'edit', 'feed_id' => $feed['id'] ], admin_url( 'admin.php' ) ) ); ?>">
+									<?php esc_html_e( 'Bearbeiten', 'podigee-rss-importer' ); ?>
+								</a>
+								<span class="podigee-actions__sep">|</span>
+								<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+									<input type="hidden" name="action" value="podigee_delete_feed">
+									<input type="hidden" name="feed_id" value="<?php echo esc_attr( $feed['id'] ); ?>">
+									<?php wp_nonce_field( 'podigee_delete_feed_' . $feed['id'], 'podigee_nonce' ); ?>
+									<button type="submit" class="button-link podigee-delete-btn"
+										onclick="return confirm('<?php esc_attr_e( 'Feed wirklich löschen?', 'podigee-rss-importer' ); ?>');">
+										<?php esc_html_e( 'Löschen', 'podigee-rss-importer' ); ?>
+									</button>
+								</form>
+							</span>
 						</td>
 					</tr>
 				<?php endforeach; ?>

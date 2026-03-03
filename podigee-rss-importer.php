@@ -46,14 +46,24 @@ spl_autoload_register( function ( string $class_name ) {
 register_activation_hook( __FILE__, function () {
 	// Ensure default option exists.
 	if ( false === get_option( 'podigee_rss_feeds' ) ) {
-		add_option( 'podigee_rss_feeds', [] );
+		add_option( 'podigee_rss_feeds', [], '', false );
 	}
 
-	// Register cron schedules for existing feeds after activation.
-	add_action( 'init', function () {
-		$cron = new Podigee_Cron_Manager();
-		$cron->reschedule_all();
+	// Reschedule cron events for existing feeds.
+	// The cron_schedules filter is needed for custom intervals like 'weekly',
+	// so we register it inline before calling reschedule_all().
+	add_filter( 'cron_schedules', function ( array $schedules ): array {
+		if ( ! isset( $schedules['weekly'] ) ) {
+			$schedules['weekly'] = [
+				'interval' => WEEK_IN_SECONDS,
+				'display'  => 'Once Weekly',
+			];
+		}
+		return $schedules;
 	} );
+
+	$cron = new Podigee_Cron_Manager();
+	$cron->reschedule_all();
 } );
 
 /**
@@ -94,7 +104,7 @@ add_action( 'plugins_loaded', function () {
 		);
 		wp_register_style(
 			'podigee-player',
-			PODIGEE_RSS_PLUGIN_URL . 'public/assets/player.css',
+			PODIGEE_RSS_PLUGIN_URL . 'public/assets/frontend.css',
 			[ 'plyr' ],
 			PODIGEE_RSS_VERSION
 		);
