@@ -101,7 +101,12 @@ class Podigee_Post_Creator {
 				case 'inline':
 					// Attachment was sideloaded before insert; re-attach to post.
 					if ( $inline_att_id > 0 ) {
-						wp_update_post( [ 'ID' => $inline_att_id, 'post_parent' => $post_id ] );
+						wp_update_post(
+							[
+								'ID' => $inline_att_id,
+								'post_parent' => $post_id,
+							]
+						);
 					}
 					break;
 
@@ -132,14 +137,17 @@ class Podigee_Post_Creator {
 
 		$blocks = [];
 		foreach ( $content_order as $section ) {
-			$blocks = array_merge( $blocks, match ( $section ) {
+			$blocks = array_merge(
+				$blocks,
+				match ( $section ) {
 				'subtitle'    => $this->build_subtitle_blocks( $episode ),
 				'image'       => $this->build_image_blocks( $episode, $image_attachment_id ),
 				'player'      => $this->build_player_blocks( $episode ),
 				'description' => $this->build_description_blocks( $episode ),
 				'shownotes'   => $this->build_shownotes_blocks( $episode ),
 				default       => [],
-			} );
+				}
+			);
 		}
 
 		return serialize_blocks( $blocks );
@@ -168,7 +176,16 @@ class Podigee_Post_Creator {
 			esc_attr( $episode['title'] ?? '' ),
 			$image_attachment_id
 		);
-		return [ $this->make_block( 'core/image', [ 'id' => $image_attachment_id, 'className' => 'podigee-episode-image' ], $html ) ];
+		return [
+			$this->make_block(
+				'core/image',
+				[
+					'id' => $image_attachment_id,
+					'className' => 'podigee-episode-image',
+				],
+				$html
+			),
+		];
 	}
 
 	private function build_player_blocks( array $episode ): array {
@@ -187,11 +204,16 @@ class Podigee_Post_Creator {
 				'<figure class="wp-block-audio"><audio controls preload="none" src="%s"></audio></figure>',
 				$audio_url
 			);
-			return [ $this->make_block(
-				'core/audio',
-				[ 'src' => $audio_url, 'className' => 'podigee-episode-player' ],
-				$inner_html
-			) ];
+			return [
+				$this->make_block(
+					'core/audio',
+					[
+						'src' => $audio_url,
+						'className' => 'podigee-episode-player',
+					],
+					$inner_html
+				),
+			];
 		}
 		return [];
 	}

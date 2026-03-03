@@ -14,6 +14,7 @@ delete_option( 'podigee_rss_feeds' );
 
 // --- Remove all Podigee post meta ---
 global $wpdb;
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- uninstall cleanup, no cache needed.
 $wpdb->query(
 	"DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE '_podigee\_%'"
 );

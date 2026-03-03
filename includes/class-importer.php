@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Podigee_Importer {
 
-	private Podigee_RSS_Parser  $parser;
+	private Podigee_RSS_Parser $parser;
 	private Podigee_Post_Creator $creator;
 	private Podigee_Feed_Manager $feed_manager;
 
@@ -29,7 +29,13 @@ class Podigee_Importer {
 	 * @return array{ imported: int, updated: int, skipped: int, errors: string[] }
 	 */
 	public function import_episodes( array $guids, array $feed_config ): array {
-		$result = [ 'imported' => 0, 'updated' => 0, 'skipped' => 0, 'errors' => [], 'post_ids' => [] ];
+		$result = [
+			'imported' => 0,
+			'updated' => 0,
+			'skipped' => 0,
+			'errors' => [],
+			'post_ids' => [],
+		];
 
 		try {
 			$all_episodes = $this->parser->parse( $feed_config['url'] );
@@ -89,7 +95,12 @@ class Podigee_Importer {
 	 * @return array Same result shape as import_episodes().
 	 */
 	public function import_all_new( array $feed_config ): array {
-		$result = [ 'imported' => 0, 'updated' => 0, 'skipped' => 0, 'errors' => [] ];
+		$result = [
+			'imported' => 0,
+			'updated' => 0,
+			'skipped' => 0,
+			'errors' => [],
+		];
 
 		try {
 			$all_episodes = $this->parser->parse( $feed_config['url'] );
@@ -150,13 +161,19 @@ class Podigee_Importer {
 	public function get_episodes_with_status( string $feed_id ): array {
 		$feed = $this->feed_manager->get( $feed_id );
 		if ( ! $feed ) {
-			return [ 'episodes' => [], 'error' => __( 'Feed nicht gefunden.', 'podigee-rss-importer' ) ];
+			return [
+				'episodes' => [],
+				'error' => __( 'Feed nicht gefunden.', 'podigee-rss-importer' ),
+			];
 		}
 
 		try {
 			$episodes = $this->parser->parse( $feed['url'] );
 		} catch ( \RuntimeException $e ) {
-			return [ 'episodes' => [], 'error' => $e->getMessage() ];
+			return [
+				'episodes' => [],
+				'error' => $e->getMessage(),
+			];
 		}
 
 		$ignored_guids = $this->feed_manager->get_ignored_guids( $feed_id );
@@ -169,7 +186,10 @@ class Podigee_Importer {
 		}
 		unset( $ep );
 
-		return [ 'episodes' => $episodes, 'error' => '' ];
+		return [
+			'episodes' => $episodes,
+			'error' => '',
+		];
 	}
 
 	// -------------------------------------------------------------------------
@@ -184,24 +204,26 @@ class Podigee_Importer {
 	 * @return int Post ID or 0 if not found.
 	 */
 	private function find_existing_post( string $guid, string $feed_id ): int {
-		$query = new WP_Query( [
-			'post_type'      => 'any',
-			'post_status'    => 'any',
-			'posts_per_page' => 1,
-			'fields'         => 'ids',
-			'no_found_rows'  => true,
-			'meta_query'     => [
-				'relation' => 'AND',
-				[
-					'key'   => '_podigee_episode_guid',
-					'value' => $guid,
+		$query = new WP_Query(
+			[
+				'post_type'      => 'any',
+				'post_status'    => 'any',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+				'meta_query'     => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- required for GUID+feed deduplication.
+					'relation' => 'AND',
+					[
+						'key'   => '_podigee_episode_guid',
+						'value' => $guid,
+					],
+					[
+						'key'   => '_podigee_feed_id',
+						'value' => $feed_id,
+					],
 				],
-				[
-					'key'   => '_podigee_feed_id',
-					'value' => $feed_id,
-				],
-			],
-		] );
+			]
+		);
 
 		$ids = $query->posts;
 		return ! empty( $ids ) ? (int) $ids[0] : 0;

@@ -209,10 +209,12 @@ class Podigee_Feed_Manager {
 
 		$content_order = self::DEFAULT_CONTENT_ORDER;
 		if ( ! empty( $data['content_order'] ) && is_array( $data['content_order'] ) ) {
-			$content_order = array_values( array_intersect(
-				array_map( 'sanitize_key', $data['content_order'] ),
-				self::CONTENT_BLOCK_KEYS
-			) );
+			$content_order = array_values(
+				array_intersect(
+					array_map( 'sanitize_key', $data['content_order'] ),
+					self::CONTENT_BLOCK_KEYS
+				)
+			);
 			if ( empty( $content_order ) ) {
 				$content_order = self::DEFAULT_CONTENT_ORDER;
 			}

@@ -18,20 +18,23 @@ $page_title = $is_new
 	: __( 'Feed bearbeiten', 'podigee-rss-importer' );
 
 // Defaults.
-$feed = wp_parse_args( $feed ?? [], [
-	'id'               => '',
-	'name'             => '',
-	'url'              => '',
-	'post_type'        => 'post',
-	'post_status'      => 'draft',
-	'use_episode_date' => false,
-	'update_existing'  => false,
-	'cron_schedule'    => 'never',
-	'image_mode'       => 'none',
-	'category_ids'     => [],
-	'tag_ids'          => [],
-	'content_order'    => Podigee_Feed_Manager::DEFAULT_CONTENT_ORDER,
-] );
+$feed = wp_parse_args(
+	$feed ?? [],
+	[
+		'id'               => '',
+		'name'             => '',
+		'url'              => '',
+		'post_type'        => 'post',
+		'post_status'      => 'draft',
+		'use_episode_date' => false,
+		'update_existing'  => false,
+		'cron_schedule'    => 'never',
+		'image_mode'       => 'none',
+		'category_ids'     => [],
+		'tag_ids'          => [],
+		'content_order'    => Podigee_Feed_Manager::DEFAULT_CONTENT_ORDER,
+	]
+);
 
 // Content order: activated items first (in saved order), then deactivated.
 $content_order   = $feed['content_order'] ?? Podigee_Feed_Manager::DEFAULT_CONTENT_ORDER;
@@ -201,12 +204,12 @@ $tags       = get_tags( [ 'hide_empty' => false ] );
 				<th scope="row"><?php esc_html_e( 'Kategorien', 'podigee-rss-importer' ); ?></th>
 				<td>
 					<div class="podigee-term-list">
-						<?php foreach ( $categories as $cat ) : ?>
+						<?php foreach ( $categories as $category ) : ?>
 							<label>
 								<input type="checkbox" name="category_ids[]"
-									value="<?php echo esc_attr( $cat->term_id ); ?>"
-									<?php checked( in_array( $cat->term_id, $feed['category_ids'], true ) ); ?>>
-								<?php echo esc_html( $cat->name ); ?>
+									value="<?php echo esc_attr( $category->term_id ); ?>"
+									<?php checked( in_array( $category->term_id, $feed['category_ids'], true ) ); ?>>
+								<?php echo esc_html( $category->name ); ?>
 							</label><br>
 						<?php endforeach; ?>
 					</div>
@@ -219,12 +222,12 @@ $tags       = get_tags( [ 'hide_empty' => false ] );
 				<th scope="row"><?php esc_html_e( 'Tags', 'podigee-rss-importer' ); ?></th>
 				<td>
 					<div class="podigee-term-list">
-						<?php foreach ( $tags as $tag ) : ?>
+						<?php foreach ( $tags as $tag_term ) : ?>
 							<label>
 								<input type="checkbox" name="tag_ids[]"
-									value="<?php echo esc_attr( $tag->term_id ); ?>"
-									<?php checked( in_array( $tag->term_id, $feed['tag_ids'], true ) ); ?>>
-								<?php echo esc_html( $tag->name ); ?>
+									value="<?php echo esc_attr( $tag_term->term_id ); ?>"
+									<?php checked( in_array( $tag_term->term_id, $feed['tag_ids'], true ) ); ?>>
+								<?php echo esc_html( $tag_term->name ); ?>
 							</label><br>
 						<?php endforeach; ?>
 					</div>

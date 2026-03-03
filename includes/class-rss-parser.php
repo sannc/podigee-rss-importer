@@ -24,10 +24,12 @@ class Podigee_RSS_Parser {
 
 		if ( is_wp_error( $feed ) ) {
 			throw new \RuntimeException(
-				sprintf(
-					/* translators: %s: error message */
-					__( 'Feed konnte nicht geladen werden: %s', 'podigee-rss-importer' ),
-					$feed->get_error_message()
+				esc_html(
+					sprintf(
+						/* translators: %s: error message */
+						__( 'Feed konnte nicht geladen werden: %s', 'podigee-rss-importer' ),
+						$feed->get_error_message()
+					)
 				)
 			);
 		}
@@ -46,10 +48,10 @@ class Podigee_RSS_Parser {
 	 * Parse a single SimplePie_Item into a normalised episode array.
 	 *
 	 * @param SimplePie_Item $item RSS item.
-	 * @param string         $feed_url Source feed URL (for context).
+	 * @param string         $feed_url Source feed URL (reserved for future use).
 	 * @return array Episode data.
 	 */
-	private function parse_item( SimplePie_Item $item, string $feed_url ): array {
+	private function parse_item( SimplePie_Item $item, string $feed_url ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// --- Core fields ---
 		$title = wp_strip_all_tags( $item->get_title() ?? '' );
 		$guid  = $item->get_id( true ) ?: $item->get_permalink();

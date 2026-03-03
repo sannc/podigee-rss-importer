@@ -48,10 +48,13 @@ class Podigee_Cron_Manager {
 				continue;
 			}
 			$hook = self::HOOK_PREFIX . $feed['id'];
-			add_action( $hook, function () use ( $feed ) {
-				$importer = new Podigee_Importer();
-				$importer->import_all_new( $feed );
-			} );
+			add_action(
+				$hook,
+				function () use ( $feed ) {
+					$importer = new Podigee_Importer();
+					$importer->import_all_new( $feed );
+				}
+			);
 		}
 	}
 

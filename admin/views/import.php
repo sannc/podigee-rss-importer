@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$selected_feed_id = sanitize_text_field( $_GET['feed_id'] ?? '' );
+$selected_feed_id = isset( $_GET['feed_id'] ) ? sanitize_text_field( wp_unslash( $_GET['feed_id'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only preselection.
 ?>
 <div class="wrap podigee-wrap">
 	<h1><?php esc_html_e( 'Episoden importieren', 'podigee-rss-importer' ); ?></h1>
@@ -21,7 +21,19 @@ $selected_feed_id = sanitize_text_field( $_GET['feed_id'] ?? '' );
 	<?php if ( empty( $feeds ) ) : ?>
 		<p>
 			<?php esc_html_e( 'Noch kein Feed konfiguriert.', 'podigee-rss-importer' ); ?>
-			<a href="<?php echo esc_url( add_query_arg( [ 'page' => 'podigee-feeds', 'action' => 'new' ], admin_url( 'admin.php' ) ) ); ?>">
+			<a href="
+			<?php
+			echo esc_url(
+				add_query_arg(
+					[
+						'page' => 'podigee-feeds',
+						'action' => 'new',
+					],
+					admin_url( 'admin.php' )
+				)
+			);
+			?>
+						">
 				<?php esc_html_e( 'Feed hinzufügen', 'podigee-rss-importer' ); ?>
 			</a>
 		</p>

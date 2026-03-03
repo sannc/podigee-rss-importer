@@ -22,17 +22,29 @@ $cron_labels = [
 ?>
 <div class="wrap podigee-wrap">
 	<h1 class="wp-heading-inline"><?php esc_html_e( 'Podigee Feeds', 'podigee-rss-importer' ); ?></h1>
-	<a href="<?php echo esc_url( add_query_arg( [ 'page' => 'podigee-feeds', 'action' => 'new' ], admin_url( 'admin.php' ) ) ); ?>"
+	<a href="
+	<?php
+	echo esc_url(
+		add_query_arg(
+			[
+				'page' => 'podigee-feeds',
+				'action' => 'new',
+			],
+			admin_url( 'admin.php' )
+		)
+	);
+	?>
+	"
 		class="page-title-action"><?php esc_html_e( 'Feed hinzufügen', 'podigee-rss-importer' ); ?></a>
 	<hr class="wp-header-end">
 
-	<?php if ( isset( $_GET['saved'] ) ) : ?>
+	<?php if ( isset( $_GET['saved'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only notice display. ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Feed gespeichert.', 'podigee-rss-importer' ); ?></p>
 		</div>
 	<?php endif; ?>
 
-	<?php if ( isset( $_GET['deleted'] ) ) : ?>
+	<?php if ( isset( $_GET['deleted'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only notice display. ?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Feed gelöscht.', 'podigee-rss-importer' ); ?></p>
 		</div>
@@ -40,7 +52,19 @@ $cron_labels = [
 
 	<?php if ( empty( $feeds ) ) : ?>
 		<p><?php esc_html_e( 'Noch keine Feeds konfiguriert.', 'podigee-rss-importer' ); ?>
-			<a href="<?php echo esc_url( add_query_arg( [ 'page' => 'podigee-feeds', 'action' => 'new' ], admin_url( 'admin.php' ) ) ); ?>">
+			<a href="
+			<?php
+			echo esc_url(
+				add_query_arg(
+					[
+						'page' => 'podigee-feeds',
+						'action' => 'new',
+					],
+					admin_url( 'admin.php' )
+				)
+			);
+			?>
+						">
 				<?php esc_html_e( 'Jetzt Feed hinzufügen', 'podigee-rss-importer' ); ?>
 			</a>
 		</p>
@@ -69,9 +93,11 @@ $cron_labels = [
 						<td><?php echo esc_html( $feed['post_type'] ); ?></td>
 						<td>
 							<span class="podigee-badge podigee-badge--<?php echo esc_attr( $feed['post_status'] ); ?>">
-								<?php echo 'publish' === $feed['post_status']
+								<?php
+								echo 'publish' === $feed['post_status']
 									? esc_html__( 'Veröffentlicht', 'podigee-rss-importer' )
-									: esc_html__( 'Entwurf', 'podigee-rss-importer' ); ?>
+									: esc_html__( 'Entwurf', 'podigee-rss-importer' );
+								?>
 							</span>
 						</td>
 						<td>
@@ -88,12 +114,37 @@ $cron_labels = [
 							<?php endif; ?>
 						</td>
 						<td class="podigee-actions">
-							<a href="<?php echo esc_url( add_query_arg( [ 'page' => 'podigee-import', 'feed_id' => $feed['id'] ], admin_url( 'admin.php' ) ) ); ?>"
+							<a href="
+							<?php
+							echo esc_url(
+								add_query_arg(
+									[
+										'page' => 'podigee-import',
+										'feed_id' => $feed['id'],
+									],
+									admin_url( 'admin.php' )
+								)
+							);
+							?>
+										"
 								class="button button-primary button-small">
 								<?php esc_html_e( 'Importieren', 'podigee-rss-importer' ); ?>
 							</a>
 							<span class="podigee-actions__secondary">
-								<a href="<?php echo esc_url( add_query_arg( [ 'page' => 'podigee-feeds', 'action' => 'edit', 'feed_id' => $feed['id'] ], admin_url( 'admin.php' ) ) ); ?>">
+								<a href="
+								<?php
+								echo esc_url(
+									add_query_arg(
+										[
+											'page' => 'podigee-feeds',
+											'action' => 'edit',
+											'feed_id' => $feed['id'],
+										],
+										admin_url( 'admin.php' )
+									)
+								);
+								?>
+											">
 									<?php esc_html_e( 'Bearbeiten', 'podigee-rss-importer' ); ?>
 								</a>
 								<span class="podigee-actions__sep">|</span>

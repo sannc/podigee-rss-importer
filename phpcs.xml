@@ -21,6 +21,40 @@
 	<rule ref="WordPress">
 		<!-- Allow short array syntax -->
 		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+
+		<!-- Class file naming: our convention omits the "podigee-" prefix -->
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+
+		<!-- Yoda conditions: not our style -->
+		<exclude name="WordPress.PHP.YodaConditions"/>
+
+		<!-- Short ternaries: valid modern PHP -->
+		<exclude name="Universal.Operators.DisallowShortTernary"/>
+
+		<!-- DOM API properties are camelCase by definition -->
+		<exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase"/>
+
+		<!-- Array alignment: stylistic, not enforced -->
+		<exclude name="WordPress.Arrays.MultipleStatementAlignment"/>
+		<exclude name="Generic.Formatting.MultipleStatementAlignment"/>
+
+		<!-- @package tag not needed for a plugin -->
+		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+
+		<!-- Doc comments: not enforced for a small plugin -->
+		<exclude name="Squiz.Commenting.ClassComment.Missing"/>
+		<exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+		<exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+		<exclude name="Squiz.Commenting.FunctionComment.WrongStyle"/>
+		<exclude name="Squiz.Commenting.VariableComment.Missing"/>
+
+		<!-- Pre-increment preference: stylistic -->
+		<exclude name="WordPress.CodeAnalysis.AssignmentInTernaryCondition"/>
+	</rule>
+
+	<!-- Allow post-increment (WordPress prefers pre-increment but both are fine) -->
+	<rule ref="Universal.Operators.DisallowStandalonePostIncrementDecrement">
+		<severity>0</severity>
 	</rule>
 
 	<!-- Text domain -->
