@@ -1,12 +1,13 @@
 <?php
 /**
  * Plugin Name: Podigee RSS Importer
- * Plugin URI:  https://github.com/podigee/podigee-rss-importer
+ * Plugin URI:  https://github.com/sannc/podigee-rss-importer
  * Description: Importiert Podigee-Podcast-RSS-Feeds als WordPress-Posts. Unterstützt mehrere Feeds, konfigurierbar pro Feed.
  * Version:     0.1
  * Requires at least: 6.0
  * Requires PHP: 8.0
- * Author:      Podigee
+ * Author:      Carsten Sann
+ * Author URI:  https://mensch-sein-heute.blog
  * License:     GPL-2.0+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: podigee-rss-importer
