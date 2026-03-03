@@ -1,0 +1,28 @@
+name: Build Release ZIP
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build ZIP with correct folder name
+        run: |
+          mkdir -p /tmp/podigee-rss-importer
+          cp -r . /tmp/podigee-rss-importer/
+          rm -rf /tmp/podigee-rss-importer/.git /tmp/podigee-rss-importer/.github
+          cd /tmp
+          zip -rq podigee-rss-importer.zip podigee-rss-importer/
+
+      - name: Upload ZIP to release
+        run: gh release upload "${{ github.event.release.tag_name }}" /tmp/podigee-rss-importer.zip --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
