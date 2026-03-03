@@ -92,8 +92,8 @@ class Podigee_Post_Creator {
 	 *
 	 * Block order:
 	 *   1. Subtitle    (itunes:subtitle, if present)
-	 *   2. Description (plain-text summary)
-	 *   3. Player      (styled audio card or Podigee embed)
+	 *   2. Player      (styled audio card or Podigee embed)
+	 *   3. Description (plain-text summary)
 	 *   4. Shownotes   (full HTML body, parsed into semantic blocks)
 	 */
 	private function build_content( array $episode ): string {
@@ -106,14 +106,7 @@ class Podigee_Post_Creator {
 			$blocks[] = $this->make_block( 'core/paragraph', [ 'className' => 'podigee-subtitle' ], $html );
 		}
 
-		// --- 2. Description ---
-		$description = trim( $episode['description'] ?? '' );
-		if ( $description !== '' ) {
-			$html     = '<p class="podigee-description">' . esc_html( $description ) . '</p>';
-			$blocks[] = $this->make_block( 'core/paragraph', [ 'className' => 'podigee-description' ], $html );
-		}
-
-		// --- 3. Player ---
+		// --- 2. Player ---
 		if ( ! empty( $episode['embed_url'] ) ) {
 			// Podigee iframe embed.
 			$embed_url = esc_url( $episode['embed_url'] );
@@ -136,6 +129,13 @@ class Podigee_Post_Creator {
 				[ 'src' => $audio_url, 'className' => 'podigee-episode-player' ],
 				$inner_html
 			);
+		}
+
+		// --- 3. Description ---
+		$description = trim( $episode['description'] ?? '' );
+		if ( $description !== '' ) {
+			$html     = '<p class="podigee-description">' . esc_html( $description ) . '</p>';
+			$blocks[] = $this->make_block( 'core/paragraph', [ 'className' => 'podigee-description' ], $html );
 		}
 
 		// --- 4. Shownotes ---
