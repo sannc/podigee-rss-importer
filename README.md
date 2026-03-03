@@ -20,9 +20,22 @@ A WordPress plugin that imports Podigee podcast RSS feeds as WordPress posts. Mu
 
 ## Installation
 
-1. Download or clone this repository into `wp-content/plugins/podigee-rss-importer/`
-2. Activate the plugin in **WP Admin → Plugins**
-3. Navigate to **Podigee Importer** in the admin menu
+### Via Git
+
+```bash
+cd wp-content/plugins/
+git clone https://github.com/sannc/podigee-rss-importer.git
+```
+
+### Via Download
+
+1. Download the [latest release](https://github.com/sannc/podigee-rss-importer/releases) as ZIP
+2. In **WP Admin → Plugins → Add New → Upload Plugin**, upload the ZIP file
+
+### Activate
+
+1. Activate the plugin in **WP Admin → Plugins**
+2. Navigate to **Podigee Importer** in the admin menu
 
 ## Usage
 
@@ -55,6 +68,8 @@ The audio player card uses CSS custom properties. Override them in your theme's 
     --podigee-player-accent:     #e94560;   /* progress bar, buttons, badge */
     --podigee-player-radius:     16px;      /* corner radius */
     --podigee-player-padding:    24px;      /* inner spacing */
+    --podigee-player-shadow:     none;      /* box shadow (default: subtle drop shadow) */
+    --podigee-player-tint:       transparent;/* background tint overlay */
     --podigee-player-thumb-size: 80px;      /* episode thumbnail size */
 }
 ```
@@ -79,8 +94,10 @@ podigee-rss-importer/
 │   └── assets/
 │       ├── admin.js             # AJAX import, episode selection UI
 │       └── admin.css            # Admin table & badge styles
+├── uninstall.php                # Data cleanup on plugin deletion
+├── LICENSE                      # GPL-2.0
 ├── public/assets/
-│   ├── player.css               # Player card styles (CSS custom properties)
+│   ├── frontend.css             # Frontend styles (player card, featured image, typography)
 │   └── plyr/
 │       ├── plyr.min.js          # Plyr 3.8.4 (bundled)
 │       └── plyr.css             # Plyr 3.8.4 styles (bundled)
