@@ -46,6 +46,18 @@
 	color: #777;
 }
 
+.podigee-episodes-table tr.is-ignored td {
+	opacity: 0.5;
+}
+
+.podigee-episodes-table tr.is-ignored.hidden {
+	display: none;
+}
+
+.podigee-ignored-toggle {
+	font-size: 13px;
+}
+
 /* -----------------------------------------------------------------------
    Status badges
 ----------------------------------------------------------------------- */
@@ -77,6 +89,11 @@
 .podigee-badge--imported {
 	background: #e2e3e5;
 	color: #383d41;
+}
+
+.podigee-badge--ignored {
+	background: #d6d8db;
+	color: #6c757d;
 }
 
 /* -----------------------------------------------------------------------

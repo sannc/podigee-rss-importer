@@ -5,6 +5,7 @@
  *  - Loading episode list via AJAX
  *  - Episode selection (all / none / new only)
  *  - Import via AJAX with status display
+ *  - Ignore / un-ignore episodes (single and bulk)
  */
 /* global jQuery, podigeeAjax */
 ( function ( $ ) {
@@ -69,21 +70,45 @@
 		$tbody.empty();
 
 		if ( ! episodes || episodes.length === 0 ) {
-			$tbody.append( '<tr><td colspan="5">' + escHtml( i18n.noEpisodes ) + '</td></tr>' );
+			$tbody.append( '<tr><td colspan="6">' + escHtml( i18n.noEpisodes ) + '</td></tr>' );
 			return;
 		}
 
+		const showIgnored = $( '#podigee-show-ignored' ).is( ':checked' );
+
 		episodes.forEach( function ( ep ) {
 			const isImported = !! ep.is_imported;
-			const statusLabel = isImported ? i18n.imported : i18n.new;
-			const statusClass = isImported ? 'imported' : 'new';
-			const date        = ep.pub_date
+			const isIgnored  = !! ep.is_ignored;
+
+			let statusLabel, statusClass;
+			if ( isIgnored ) {
+				statusLabel = i18n.ignored;
+				statusClass = 'ignored';
+			} else if ( isImported ) {
+				statusLabel = i18n.imported;
+				statusClass = 'imported';
+			} else {
+				statusLabel = i18n.new;
+				statusClass = 'new';
+			}
+
+			const date = ep.pub_date
 				? new Date( ep.pub_date * 1000 ).toLocaleDateString( document.documentElement.lang || 'de' )
 				: '–';
-			const rowClass = isImported ? 'is-imported' : '';
+
+			let rowClass = '';
+			if ( isIgnored ) {
+				rowClass = 'is-ignored' + ( showIgnored ? '' : ' hidden' );
+			} else if ( isImported ) {
+				rowClass = 'is-imported';
+			}
+
+			const actionBtn = isIgnored
+				? '<button type="button" class="button button-small podigee-unignore-btn" data-guid="' + escAttr( ep.guid ) + '">' + escHtml( i18n.unignore ) + '</button>'
+				: '<button type="button" class="button button-small podigee-ignore-btn" data-guid="' + escAttr( ep.guid ) + '">' + escHtml( i18n.ignore ) + '</button>';
 
 			const row = $(
-				'<tr class="' + escHtml( rowClass ) + '">' +
+				'<tr class="' + escHtml( rowClass ) + '" data-guid="' + escAttr( ep.guid ) + '">' +
 					'<td class="check-column">' +
 						'<input type="checkbox" class="podigee-ep-check" ' +
 							'data-guid="' + escAttr( ep.guid ) + '" ' +
@@ -92,7 +117,8 @@
 					'<td>' + escHtml( ep.episode_number || '–' ) + '</td>' +
 					'<td>' + escHtml( ep.title ) + '</td>' +
 					'<td>' + escHtml( date ) + '</td>' +
-					'<td>' + renderStatusBadge( isImported, statusClass, statusLabel, ep.existing_post_id ) + '</td>' +
+					'<td>' + renderStatusBadge( isImported, isIgnored, statusClass, statusLabel, ep.existing_post_id ) + '</td>' +
+					'<td>' + actionBtn + '</td>' +
 				'</tr>'
 			);
 
@@ -101,11 +127,123 @@
 	}
 
 	// =========================================================================
+	// Toggle: show/hide ignored rows
+	// =========================================================================
+
+	$( document ).on( 'change', '#podigee-show-ignored', function () {
+		const show = $( this ).is( ':checked' );
+		$tbody.find( 'tr.is-ignored' ).toggleClass( 'hidden', ! show );
+	} );
+
+	// =========================================================================
+	// Ignore / Un-ignore (single row)
+	// =========================================================================
+
+	$( document ).on( 'click', '.podigee-ignore-btn', function () {
+		const guid   = $( this ).data( 'guid' );
+		const feedId = $( '#podigee-feed-select' ).val();
+		ignoreEpisodes( feedId, [ guid ] );
+	} );
+
+	$( document ).on( 'click', '.podigee-unignore-btn', function () {
+		const guid   = $( this ).data( 'guid' );
+		const feedId = $( '#podigee-feed-select' ).val();
+		unignoreEpisodes( feedId, [ guid ] );
+	} );
+
+	// =========================================================================
+	// Bulk: Ignore selected
+	// =========================================================================
+
+	$( document ).on( 'click', '#podigee-ignore-selected', function () {
+		const feedId = $( '#podigee-feed-select' ).val();
+		if ( ! feedId ) {
+			return;
+		}
+
+		const guids = [];
+		$tbody.find( '.podigee-ep-check:checked' ).each( function () {
+			guids.push( String( $( this ).data( 'guid' ) ) );
+		} );
+
+		if ( guids.length === 0 ) {
+			alert( i18n.noSelection );
+			return;
+		}
+
+		ignoreEpisodes( feedId, guids );
+	} );
+
+	// =========================================================================
+	// AJAX helpers: ignore / unignore
+	// =========================================================================
+
+	function ignoreEpisodes( feedId, guids ) {
+		$.ajax( {
+			url: podigeeAjax.ajaxUrl,
+			method: 'POST',
+			data: {
+				action:  'podigee_ignore_episodes',
+				nonce:   podigeeAjax.nonceIgnore,
+				feed_id: feedId,
+				guids:   guids,
+			},
+			success: function ( response ) {
+				if ( ! response.success ) {
+					showError( response.data || i18n.errorIgnore );
+					return;
+				}
+				// Mark episodes as ignored in local cache and re-render.
+				guids.forEach( function ( guid ) {
+					const ep = currentEpisodes.find( function ( e ) { return e.guid === guid; } );
+					if ( ep ) {
+						ep.is_ignored = true;
+					}
+				} );
+				renderEpisodes( currentEpisodes );
+			},
+			error: function () {
+				showError( i18n.errorIgnore );
+			},
+		} );
+	}
+
+	function unignoreEpisodes( feedId, guids ) {
+		$.ajax( {
+			url: podigeeAjax.ajaxUrl,
+			method: 'POST',
+			data: {
+				action:  'podigee_unignore_episodes',
+				nonce:   podigeeAjax.nonceUnignore,
+				feed_id: feedId,
+				guids:   guids,
+			},
+			success: function ( response ) {
+				if ( ! response.success ) {
+					showError( response.data || i18n.errorIgnore );
+					return;
+				}
+				// Remove ignored flag from local cache and re-render.
+				guids.forEach( function ( guid ) {
+					const ep = currentEpisodes.find( function ( e ) { return e.guid === guid; } );
+					if ( ep ) {
+						ep.is_ignored = false;
+					}
+				} );
+				renderEpisodes( currentEpisodes );
+			},
+			error: function () {
+				showError( i18n.errorIgnore );
+			},
+		} );
+	}
+
+	// =========================================================================
 	// Bulk Selection Buttons
 	// =========================================================================
 
 	$( '#podigee-select-all' ).on( 'click', function () {
-		$tbody.find( '.podigee-ep-check' ).prop( 'checked', true );
+		$tbody.find( 'tr:not(.hidden) .podigee-ep-check' ).prop( 'checked', true );
 	} );
 
 	$( '#podigee-select-none' ).on( 'click', function () {
@@ -113,7 +251,7 @@
 	} );
 
 	$( '#podigee-select-new' ).on( 'click', function () {
-		$tbody.find( '.podigee-ep-check' ).each( function () {
+		$tbody.find( 'tr:not(.hidden) .podigee-ep-check' ).each( function () {
 			$( this ).prop( 'checked', $( this ).data( 'imported' ) === 0 || $( this ).data( 'imported' ) === '0' );
 		} );
 	} );
@@ -177,9 +315,9 @@
 	// Result display helpers
 	// =========================================================================
 
-	function renderStatusBadge( isImported, statusClass, statusLabel, postId ) {
+	function renderStatusBadge( isImported, isIgnored, statusClass, statusLabel, postId ) {
 		const badge = '<span class="podigee-badge podigee-badge--' + escAttr( statusClass ) + '">' + escHtml( statusLabel ) + '</span>';
-		if ( isImported && postId ) {
+		if ( isImported && ! isIgnored && postId ) {
 			const url = podigeeAjax.editPostUrl + '?post=' + parseInt( postId, 10 ) + '&action=edit';
 			return '<a href="' + url + '" target="_blank" rel="noopener" style="text-decoration:none;">' + badge + '</a>';
 		}

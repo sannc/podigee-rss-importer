@@ -57,6 +57,10 @@ class Podigee_Feed_Manager {
 			$updated = false;
 			foreach ( $feeds as $index => $existing ) {
 				if ( $existing['id'] === $feed['id'] ) {
+					// Preserve ignored_guids if not explicitly provided in the incoming data.
+					if ( ! isset( $data['ignored_guids'] ) && ! empty( $existing['ignored_guids'] ) ) {
+						$feed['ignored_guids'] = $existing['ignored_guids'];
+					}
 					$feeds[ $index ] = $feed;
 					$updated         = true;
 					break;
@@ -69,6 +73,55 @@ class Podigee_Feed_Manager {
 
 		update_option( self::OPTION_KEY, $feeds );
 		return $feed;
+	}
+
+	/**
+	 * Add one or more GUIDs to the ignore list of a feed.
+	 *
+	 * @param string   $feed_id Feed UUID.
+	 * @param string[] $guids   GUIDs to ignore.
+	 */
+	public function ignore_episodes( string $feed_id, array $guids ): void {
+		$feeds = $this->get_all();
+		foreach ( $feeds as &$feed ) {
+			if ( $feed['id'] === $feed_id ) {
+				$existing              = (array) ( $feed['ignored_guids'] ?? [] );
+				$feed['ignored_guids'] = array_values( array_unique( array_merge( $existing, $guids ) ) );
+				break;
+			}
+		}
+		unset( $feed );
+		update_option( self::OPTION_KEY, $feeds );
+	}
+
+	/**
+	 * Remove one or more GUIDs from the ignore list of a feed.
+	 *
+	 * @param string   $feed_id Feed UUID.
+	 * @param string[] $guids   GUIDs to un-ignore.
+	 */
+	public function unignore_episodes( string $feed_id, array $guids ): void {
+		$feeds = $this->get_all();
+		foreach ( $feeds as &$feed ) {
+			if ( $feed['id'] === $feed_id ) {
+				$existing              = (array) ( $feed['ignored_guids'] ?? [] );
+				$feed['ignored_guids'] = array_values( array_diff( $existing, $guids ) );
+				break;
+			}
+		}
+		unset( $feed );
+		update_option( self::OPTION_KEY, $feeds );
+	}
+
+	/**
+	 * Return the list of ignored GUIDs for a feed.
+	 *
+	 * @param string $feed_id Feed UUID.
+	 * @return string[]
+	 */
+	public function get_ignored_guids( string $feed_id ): array {
+		$feed = $this->get( $feed_id );
+		return $feed ? (array) ( $feed['ignored_guids'] ?? [] ) : [];
 	}
 
 	/**
@@ -140,6 +193,11 @@ class Podigee_Feed_Manager {
 			$tag_ids = array_map( 'absint', $data['tag_ids'] );
 		}
 
+		$ignored_guids = [];
+		if ( ! empty( $data['ignored_guids'] ) && is_array( $data['ignored_guids'] ) ) {
+			$ignored_guids = array_values( array_map( 'sanitize_text_field', $data['ignored_guids'] ) );
+		}
+
 		return [
 			'id'               => sanitize_text_field( $data['id'] ?? '' ),
 			'name'             => sanitize_text_field( $data['name'] ?? '' ),
@@ -152,6 +210,7 @@ class Podigee_Feed_Manager {
 			'category_ids'     => $category_ids,
 			'tag_ids'          => $tag_ids,
 			'last_run'         => absint( $data['last_run'] ?? 0 ),
+			'ignored_guids'    => $ignored_guids,
 		];
 	}
 

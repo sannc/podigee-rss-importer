@@ -96,8 +96,16 @@ class Podigee_Importer {
 			return $result;
 		}
 
+		$ignored_guids = $this->feed_manager->get_ignored_guids( $feed_config['id'] );
+
 		foreach ( $all_episodes as $episode ) {
 			if ( empty( $episode['guid'] ) ) {
+				$result['skipped']++;
+				continue;
+			}
+
+			// Never auto-import ignored episodes.
+			if ( in_array( $episode['guid'], $ignored_guids, true ) ) {
 				$result['skipped']++;
 				continue;
 			}
@@ -149,10 +157,13 @@ class Podigee_Importer {
 			return [ 'episodes' => [], 'error' => $e->getMessage() ];
 		}
 
+		$ignored_guids = $this->feed_manager->get_ignored_guids( $feed_id );
+
 		foreach ( $episodes as &$ep ) {
-			$existing_id         = $this->find_existing_post( $ep['guid'], $feed_id );
-			$ep['is_imported']   = $existing_id > 0;
+			$existing_id            = $this->find_existing_post( $ep['guid'], $feed_id );
+			$ep['is_imported']      = $existing_id > 0;
 			$ep['existing_post_id'] = $existing_id;
+			$ep['is_ignored']       = in_array( $ep['guid'], $ignored_guids, true );
 		}
 		unset( $ep );
 

@@ -47,10 +47,20 @@ $selected_feed_id = sanitize_text_field( $_GET['feed_id'] ?? '' );
 				<button type="button" id="podigee-select-all" class="button button-secondary"><?php esc_html_e( 'Alle auswählen', 'podigee-rss-importer' ); ?></button>
 				<button type="button" id="podigee-select-none" class="button button-secondary"><?php esc_html_e( 'Keine auswählen', 'podigee-rss-importer' ); ?></button>
 				<button type="button" id="podigee-select-new" class="button button-secondary"><?php esc_html_e( 'Nur neue auswählen', 'podigee-rss-importer' ); ?></button>
+				<button type="button" id="podigee-ignore-selected" class="button button-secondary">
+					<?php esc_html_e( 'Ausgewählte ignorieren', 'podigee-rss-importer' ); ?>
+				</button>
 				<button type="button" class="podigee-import-btn button button-primary">
 					<?php esc_html_e( 'Ausgewählte importieren', 'podigee-rss-importer' ); ?>
 				</button>
 				<span class="podigee-import-spinner spinner" style="float:none; visibility:hidden;"></span>
+			</div>
+
+			<div class="podigee-ignored-toggle" style="margin-top:10px;">
+				<label>
+					<input type="checkbox" id="podigee-show-ignored">
+					<?php esc_html_e( 'Ignorierte anzeigen', 'podigee-rss-importer' ); ?>
+				</label>
 			</div>
 
 			<table class="wp-list-table widefat fixed striped podigee-episodes-table" style="margin-top:10px;">
@@ -61,6 +71,7 @@ $selected_feed_id = sanitize_text_field( $_GET['feed_id'] ?? '' );
 						<th scope="col"><?php esc_html_e( 'Titel', 'podigee-rss-importer' ); ?></th>
 						<th scope="col" style="width:130px;"><?php esc_html_e( 'Datum', 'podigee-rss-importer' ); ?></th>
 						<th scope="col" style="width:130px;"><?php esc_html_e( 'Status', 'podigee-rss-importer' ); ?></th>
+						<th scope="col" style="width:120px;"><?php esc_html_e( 'Aktionen', 'podigee-rss-importer' ); ?></th>
 					</tr>
 				</thead>
 				<tbody id="podigee-episodes-tbody">
