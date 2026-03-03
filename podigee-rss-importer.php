@@ -29,11 +29,12 @@ define( 'PODIGEE_RSS_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 require_once PODIGEE_RSS_PLUGIN_DIR . 'vendor/plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
-PucFactory::buildUpdateChecker(
+$podigee_update_checker = PucFactory::buildUpdateChecker(
 	'https://github.com/sannc/podigee-rss-importer/',
 	__FILE__,
 	'podigee-rss-importer'
 );
+$podigee_update_checker->getVcsApi()->enableReleaseAssets();
 
 /**
  * Autoloader for plugin classes.
