@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  syntax-check:
+    name: PHP Syntax Check (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.0', '8.2', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: none
+
+      - name: Check syntax
+        run: find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
+
+  phpcs:
+    name: WordPress Coding Standards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer, cs2pr
+
+      - name: Install dependencies
+        run: |
+          composer global config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer global require --dev wp-coding-standards/wpcs:"^3.0" phpcsstandards/phpcsutils
+
+      - name: Run PHPCS
+        run: phpcs --report-full --report-checkstyle=phpcs-report.xml || true
+
+      - name: Annotate PR
+        if: always()
+        run: cs2pr phpcs-report.xml
+
+  i18n-check:
+    name: i18n Consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: wp-cli
+
+      - name: Install WordPress
+        run: |
+          mkdir -p /tmp/wp
+          wp core download --path=/tmp/wp --skip-content
+          wp config create --path=/tmp/wp --dbname=wp --dbuser=root --dbpass=root --skip-check
+
+      - name: Regenerate .pot and check for changes
+        run: |
+          wp i18n make-pot . languages/podigee-rss-importer.pot --path=/tmp/wp
+          git diff --exit-code languages/podigee-rss-importer.pot

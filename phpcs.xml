@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ruleset name="Podigee RSS Importer">
+	<description>PHPCS rules for the Podigee RSS Importer plugin.</description>
+
+	<!-- What to scan -->
+	<file>podigee-rss-importer.php</file>
+	<file>includes/</file>
+	<file>admin/</file>
+	<file>uninstall.php</file>
+
+	<!-- Excludes -->
+	<exclude-pattern>vendor/*</exclude-pattern>
+	<exclude-pattern>public/assets/*</exclude-pattern>
+
+	<!-- Arguments -->
+	<arg value="sp"/>
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+
+	<!-- WordPress Coding Standards -->
+	<rule ref="WordPress">
+		<!-- Allow short array syntax -->
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+	</rule>
+
+	<!-- Text domain -->
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="podigee-rss-importer"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Minimum supported versions -->
+	<config name="minimum_supported_wp_version" value="6.0"/>
+	<config name="testVersion" value="8.0-"/>
+</ruleset>
