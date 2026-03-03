@@ -39,7 +39,7 @@ class Podigee_Admin {
 	public function register_menus(): void {
 		add_menu_page(
 			__( 'Podigee Importer', 'podigee-rss-importer' ),
-			__( 'Podigee Importer', 'podigee-rss-importer' ),
+			__( 'Podigee RSS', 'podigee-rss-importer' ),
 			'manage_options',
 			'podigee-feeds',
 			[ $this, 'page_feeds' ],
