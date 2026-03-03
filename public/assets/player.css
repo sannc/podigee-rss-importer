@@ -14,11 +14,37 @@
 ----------------------------------------------------------------------- */
 .podigee-featured-image {
 	aspect-ratio: unset !important;
+	position: relative;
+	cursor: pointer;
 }
 
 .podigee-featured-image img {
 	height: auto !important;
 	object-fit: unset !important;
+}
+
+/* Play / pause overlay icon – visible on hover and while playing */
+.podigee-featured-image::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background:
+		center / 64px no-repeat
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='rgba(0%2C0%2C0%2C0.45)'/%3E%3Cpolygon points='32%2C24 60%2C40 32%2C56' fill='white'/%3E%3C/svg%3E");
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+.podigee-featured-image:hover::after,
+.podigee-featured-image.is-playing::after {
+	opacity: 1;
+}
+
+/* Swap to pause icon while playing */
+.podigee-featured-image.is-playing::after {
+	background-image:
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='38' fill='rgba(0%2C0%2C0%2C0.45)'/%3E%3Crect x='26' y='22' width='10' height='36' fill='white'/%3E%3Crect x='44' y='22' width='10' height='36' fill='white'/%3E%3C/svg%3E");
 }
 
 /* -----------------------------------------------------------------------

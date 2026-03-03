@@ -119,7 +119,7 @@ class Podigee_Post_Creator {
 			$host       = wp_parse_url( home_url(), PHP_URL_HOST ) ?? '';
 			$audio_url  = esc_url( add_query_arg( 'source', $host, $episode['audio_url'] ) );
 			$inner_html = sprintf(
-				'<figure class="wp-block-audio"><audio controls src="%s"></audio></figure>',
+				'<figure class="wp-block-audio"><audio controls preload="none" src="%s"></audio></figure>',
 				$audio_url
 			);
 			// className 'podigee-episode-player' marks the block for the

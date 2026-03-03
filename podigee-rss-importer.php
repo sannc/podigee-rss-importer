@@ -98,16 +98,13 @@ add_action( 'plugins_loaded', function () {
 			[ 'plyr' ],
 			PODIGEE_RSS_VERSION
 		);
-		// Init Plyr on all episode player elements.
-		// Script runs in the footer after the DOM is built – no DOMContentLoaded needed.
-		wp_add_inline_script( 'plyr', "
-			(function() {
-				var els = document.querySelectorAll('.podigee-episode-player audio');
-				els.forEach(function(el) {
-					new Plyr(el, { controls: ['play','progress','current-time','duration','mute','volume'] });
-				});
-			})();
-		" );
+		wp_enqueue_script(
+			'podigee-player',
+			PODIGEE_RSS_PLUGIN_URL . 'public/assets/player.js',
+			[ 'plyr' ],
+			PODIGEE_RSS_VERSION,
+			true
+		);
 	} );
 
 	// Preserve the original aspect ratio of featured images on Podigee posts.
