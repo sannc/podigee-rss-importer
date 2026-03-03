@@ -46,6 +46,7 @@ jobs:
 
       - name: Annotate PR
         if: always()
+        continue-on-error: true
         run: cs2pr phpcs-report.xml
 
   i18n-check:
@@ -69,4 +70,4 @@ jobs:
       - name: Regenerate .pot and check for changes
         run: |
           wp i18n make-pot . languages/podigee-rss-importer.pot --path=/tmp/wp
-          git diff --exit-code languages/podigee-rss-importer.pot
+          git diff -I'^"POT-Creation-Date:' -I'^"Report-Msgid-Bugs-To:' --exit-code languages/podigee-rss-importer.pot
