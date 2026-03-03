@@ -5,6 +5,23 @@
  */
 
 /* -----------------------------------------------------------------------
+   Featured image – preserve original aspect ratio
+   The core/post-featured-image block injects inline aspect-ratio and
+   object-fit:cover; override only for Podigee posts via a class added
+   by the render_block filter in podigee-rss-importer.php.
+   Themes can undo this by targeting .podigee-featured-image with higher
+   specificity or their own !important rule.
+----------------------------------------------------------------------- */
+.podigee-featured-image {
+	aspect-ratio: unset !important;
+}
+
+.podigee-featured-image img {
+	height: auto !important;
+	object-fit: unset !important;
+}
+
+/* -----------------------------------------------------------------------
    Subtitle & Description paragraphs
 ----------------------------------------------------------------------- */
 .podigee-subtitle {

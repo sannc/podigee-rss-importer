@@ -110,6 +110,25 @@ add_action( 'plugins_loaded', function () {
 		" );
 	} );
 
+	// Preserve the original aspect ratio of featured images on Podigee posts.
+	// The core/post-featured-image block injects inline aspect-ratio and object-fit:cover
+	// styles that would otherwise crop square podcast artwork to the theme's ratio.
+	add_filter( 'render_block', function ( string $block_content, array $block ): string {
+		if ( $block['blockName'] !== 'core/post-featured-image' ) {
+			return $block_content;
+		}
+		$post_id = get_the_ID();
+		if ( ! $post_id || ! get_post_meta( $post_id, '_podigee_feed_id', true ) ) {
+			return $block_content;
+		}
+		return preg_replace(
+			'/(<figure\b[^>]*class=")/',
+			'$1podigee-featured-image ',
+			$block_content,
+			1
+		);
+	}, 10, 2 );
+
 	// Wrap our core/audio blocks in a minimal, customisable player card.
 	add_filter( 'render_block', function ( string $block_content, array $block ): string {
 		if ( $block['blockName'] !== 'core/audio' ) {
