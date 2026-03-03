@@ -1,4 +1,4 @@
-# Copyright (C) 2026 Podigee
+# Copyright (C) 2026 Carsten Sann
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-03-03T17:54:54+00:00\n"
+"POT-Creation-Date: 2026-03-03T19:12:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: podigee-rss-importer\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #. Plugin URI of the plugin
 #: podigee-rss-importer.php
-msgid "https://github.com/podigee/podigee-rss-importer"
+msgid "https://github.com/sannc/podigee-rss-importer"
 msgstr ""
 
 #. Description of the plugin
@@ -31,7 +31,12 @@ msgstr ""
 
 #. Author of the plugin
 #: podigee-rss-importer.php
-msgid "Podigee"
+msgid "Carsten Sann"
+msgstr ""
+
+#. Author URI of the plugin
+#: podigee-rss-importer.php
+msgid "https://mensch-sein-heute.blog"
 msgstr ""
 
 #: admin/class-admin.php:41
@@ -138,31 +143,31 @@ msgstr ""
 #: admin/class-admin.php:139
 #: admin/class-admin.php:157
 #: admin/class-admin.php:170
-#: admin/class-admin.php:200
-#: admin/class-admin.php:224
-#: admin/class-admin.php:246
-#: admin/class-admin.php:271
-#: admin/class-admin.php:289
+#: admin/class-admin.php:202
+#: admin/class-admin.php:226
+#: admin/class-admin.php:248
+#: admin/class-admin.php:273
+#: admin/class-admin.php:291
 msgid "Zugriff verweigert."
 msgstr ""
 
-#: admin/class-admin.php:229
-#: admin/class-admin.php:253
+#: admin/class-admin.php:231
+#: admin/class-admin.php:255
 msgid "Keine Feed-ID angegeben."
 msgstr ""
 
-#: admin/class-admin.php:258
+#: admin/class-admin.php:260
 #: includes/class-importer.php:153
 msgid "Feed nicht gefunden."
 msgstr ""
 
-#: admin/class-admin.php:278
-#: admin/class-admin.php:296
+#: admin/class-admin.php:280
+#: admin/class-admin.php:298
 msgid "Ungültige Parameter."
 msgstr ""
 
 #: admin/views/feed-edit.php:17
-#: admin/views/feed-edit.php:180
+#: admin/views/feed-edit.php:236
 #: admin/views/feeds-list.php:26
 #: admin/views/import.php:25
 msgid "Feed hinzufügen"
@@ -173,96 +178,146 @@ msgid "Feed bearbeiten"
 msgstr ""
 
 #: admin/views/feed-edit.php:41
+msgid "Untertitel"
+msgstr ""
+
+#: admin/views/feed-edit.php:42
+#: admin/views/feed-edit.php:159
+msgid "Episodenbild"
+msgstr ""
+
+#: admin/views/feed-edit.php:43
+msgid "Player"
+msgstr ""
+
+#: admin/views/feed-edit.php:44
+msgid "Beschreibung"
+msgstr ""
+
+#: admin/views/feed-edit.php:45
+#: includes/class-post-creator.php:226
+msgid "Shownotes"
+msgstr ""
+
+#: admin/views/feed-edit.php:55
 msgid "Zurück zur Übersicht"
 msgstr ""
 
-#: admin/views/feed-edit.php:53
+#: admin/views/feed-edit.php:67
 #: admin/views/feeds-list.php:51
 msgid "Name"
 msgstr ""
 
-#: admin/views/feed-edit.php:59
+#: admin/views/feed-edit.php:73
 msgid "Anzeigename für diesen Feed (nur intern)"
 msgstr ""
 
-#: admin/views/feed-edit.php:65
+#: admin/views/feed-edit.php:79
 #: admin/views/feeds-list.php:52
 msgid "Feed-URL"
 msgstr ""
 
-#: admin/views/feed-edit.php:72
+#: admin/views/feed-edit.php:86
 msgid "Vollständige URL des Podigee RSS-Feeds"
 msgstr ""
 
-#: admin/views/feed-edit.php:78
+#: admin/views/feed-edit.php:92
 #: admin/views/feeds-list.php:53
 msgid "Post-Type"
 msgstr ""
 
-#: admin/views/feed-edit.php:94
+#: admin/views/feed-edit.php:108
 msgid "Post-Status"
 msgstr ""
 
-#: admin/views/feed-edit.php:100
+#: admin/views/feed-edit.php:114
 #: admin/views/feeds-list.php:74
 msgid "Entwurf"
 msgstr ""
 
-#: admin/views/feed-edit.php:106
+#: admin/views/feed-edit.php:120
 #: admin/views/feeds-list.php:73
 msgid "Veröffentlicht"
 msgstr ""
 
-#: admin/views/feed-edit.php:112
+#: admin/views/feed-edit.php:126
 msgid "Optionen"
 msgstr ""
 
-#: admin/views/feed-edit.php:117
+#: admin/views/feed-edit.php:131
 msgid "Episodendatum als Post-Datum verwenden"
 msgstr ""
 
-#: admin/views/feed-edit.php:123
+#: admin/views/feed-edit.php:137
 msgid "Bereits importierte Posts aktualisieren"
 msgstr ""
 
-#: admin/views/feed-edit.php:130
+#: admin/views/feed-edit.php:144
 msgid "Automatischer Import"
 msgstr ""
 
-#: admin/views/feed-edit.php:134
+#: admin/views/feed-edit.php:148
 #: admin/views/feeds-list.php:16
 msgid "Deaktiviert"
 msgstr ""
 
-#: admin/views/feed-edit.php:135
+#: admin/views/feed-edit.php:149
 #: admin/views/feeds-list.php:17
 msgid "Stündlich"
 msgstr ""
 
-#: admin/views/feed-edit.php:136
+#: admin/views/feed-edit.php:150
 #: admin/views/feeds-list.php:18
 msgid "Zweimal täglich"
 msgstr ""
 
-#: admin/views/feed-edit.php:137
+#: admin/views/feed-edit.php:151
 #: admin/views/feeds-list.php:19
 msgid "Täglich"
 msgstr ""
 
-#: admin/views/feed-edit.php:138
+#: admin/views/feed-edit.php:152
 #: admin/views/feeds-list.php:20
 msgid "Wöchentlich"
 msgstr ""
 
-#: admin/views/feed-edit.php:145
+#: admin/views/feed-edit.php:163
+msgid "Nein"
+msgstr ""
+
+#: admin/views/feed-edit.php:164
+msgid "Als Beitragsbild"
+msgstr ""
+
+#: admin/views/feed-edit.php:165
+msgid "Als Bild im Artikel"
+msgstr ""
+
+#: admin/views/feed-edit.php:166
+msgid "Nur in die Mediathek"
+msgstr ""
+
+#: admin/views/feed-edit.php:168
+msgid "Was soll mit dem Episodenbild geschehen?"
+msgstr ""
+
+#: admin/views/feed-edit.php:173
+msgid "Reihenfolge im Beitrag"
+msgstr ""
+
+#: admin/views/feed-edit.php:195
+msgid "Elemente per Checkbox aktivieren und per Drag & Drop sortieren."
+msgstr ""
+
+#: admin/views/feed-edit.php:201
 msgid "Kategorien"
 msgstr ""
 
-#: admin/views/feed-edit.php:163
+#: admin/views/feed-edit.php:219
 msgid "Tags"
 msgstr ""
 
-#: admin/views/feed-edit.php:180
+#: admin/views/feed-edit.php:236
 msgid "Änderungen speichern"
 msgstr ""
 
@@ -379,10 +434,6 @@ msgstr ""
 msgid "Fehler bei \"%1$s\": %2$s"
 msgstr ""
 
-#: includes/class-post-creator.php:159
-msgid "Shownotes"
-msgstr ""
-
 #. translators: %s: error message
 #: includes/class-rss-parser.php:29
 #, php-format
@@ -390,13 +441,13 @@ msgid "Feed konnte nicht geladen werden: %s"
 msgstr ""
 
 #. translators: %1$s: season number, %2$s: episode number
-#: podigee-rss-importer.php:163
+#: podigee-rss-importer.php:164
 #, php-format
 msgid "S%1$s E%2$s anhören"
 msgstr ""
 
 #. translators: %s: episode number
-#: podigee-rss-importer.php:165
+#: podigee-rss-importer.php:166
 #, php-format
 msgid "Episode %s anhören"
 msgstr ""

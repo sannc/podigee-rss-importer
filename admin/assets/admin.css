@@ -180,6 +180,55 @@
 }
 
 /* -----------------------------------------------------------------------
+   Content order sortable (feed edit)
+----------------------------------------------------------------------- */
+.podigee-sortable {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.podigee-sortable li {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	margin-bottom: 4px;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	cursor: grab;
+	user-select: none;
+}
+
+.podigee-sortable li:active {
+	cursor: grabbing;
+}
+
+.podigee-sortable .podigee-drag-handle {
+	color: #999;
+}
+
+.podigee-sortable-disabled {
+	opacity: .5;
+}
+
+.podigee-sortable-disabled label {
+	color: #999;
+}
+
+.podigee-sortable .ui-sortable-helper {
+	box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+}
+
+.podigee-sortable .ui-sortable-placeholder {
+	border: 2px dashed #2271b1;
+	background: #f0f6fc;
+	visibility: visible !important;
+	height: 38px;
+}
+
+/* -----------------------------------------------------------------------
    Import result box
 ----------------------------------------------------------------------- */
 #podigee-import-result .notice {

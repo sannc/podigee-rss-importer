@@ -423,6 +423,40 @@
 	}
 
 	// =========================================================================
+	// Content order: Sortable + image_mode dependency
+	// =========================================================================
+
+	$( function () {
+		$( '#podigee-content-order' ).sortable( {
+			handle: '.podigee-drag-handle',
+			axis: 'y',
+			containment: 'parent',
+		} );
+
+		$( '#podigee-image-mode' ).on( 'change', function () {
+			var $imgItem = $( '#podigee-content-order li[data-key="image"]' );
+			var $cb      = $imgItem.find( 'input[type="checkbox"]' );
+			if ( $( this ).val() !== 'inline' ) {
+				$cb.prop( 'checked', false ).prop( 'disabled', true );
+				$imgItem.addClass( 'podigee-sortable-disabled' );
+			} else {
+				$cb.prop( 'disabled', false );
+				$imgItem.removeClass( 'podigee-sortable-disabled' );
+			}
+		} ).trigger( 'change' );
+
+		// Ensure disabled checkboxes are submitted as unchecked (re-enable before submit).
+		$( 'form' ).on( 'submit', function () {
+			$( '#podigee-content-order input:disabled' ).prop( 'disabled', false ).prop( 'checked', false );
+		} );
+	} );
+
+	// Toggle disabled styling when checkbox is changed.
+	$( document ).on( 'change', '#podigee-content-order input[type="checkbox"]', function () {
+		$( this ).closest( 'li' ).toggleClass( 'podigee-sortable-disabled', ! this.checked );
+	} );
+
+	// =========================================================================
 	// Auto-load if feed pre-selected via URL param
 	// =========================================================================
 

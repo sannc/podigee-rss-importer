@@ -30,7 +30,20 @@ $feed = wp_parse_args( $feed ?? [], [
 	'image_mode'       => 'none',
 	'category_ids'     => [],
 	'tag_ids'          => [],
+	'content_order'    => Podigee_Feed_Manager::DEFAULT_CONTENT_ORDER,
 ] );
+
+// Content order: activated items first (in saved order), then deactivated.
+$content_order   = $feed['content_order'] ?? Podigee_Feed_Manager::DEFAULT_CONTENT_ORDER;
+$all_block_keys  = Podigee_Feed_Manager::CONTENT_BLOCK_KEYS;
+$disabled_keys   = array_values( array_diff( $all_block_keys, $content_order ) );
+$block_labels    = [
+	'subtitle'    => __( 'Untertitel', 'podigee-rss-importer' ),
+	'image'       => __( 'Episodenbild', 'podigee-rss-importer' ),
+	'player'      => __( 'Player', 'podigee-rss-importer' ),
+	'description' => __( 'Beschreibung', 'podigee-rss-importer' ),
+	'shownotes'   => __( 'Shownotes', 'podigee-rss-importer' ),
+];
 
 $post_types = get_post_types( [ 'public' => true ], 'objects' );
 $categories = get_categories( [ 'hide_empty' => false ] );
@@ -148,11 +161,38 @@ $tags       = get_tags( [ 'hide_empty' => false ] );
 				<td>
 					<select id="podigee-image-mode" name="image_mode">
 						<option value="none" <?php selected( $feed['image_mode'], 'none' ); ?>><?php esc_html_e( 'Nein', 'podigee-rss-importer' ); ?></option>
-						<option value="featured" <?php selected( $feed['image_mode'], 'featured' ); ?>><?php esc_html_e( 'Als Featured Image', 'podigee-rss-importer' ); ?></option>
+						<option value="featured" <?php selected( $feed['image_mode'], 'featured' ); ?>><?php esc_html_e( 'Als Beitragsbild', 'podigee-rss-importer' ); ?></option>
 						<option value="inline" <?php selected( $feed['image_mode'], 'inline' ); ?>><?php esc_html_e( 'Als Bild im Artikel', 'podigee-rss-importer' ); ?></option>
 						<option value="media_only" <?php selected( $feed['image_mode'], 'media_only' ); ?>><?php esc_html_e( 'Nur in die Mediathek', 'podigee-rss-importer' ); ?></option>
 					</select>
 					<p class="description"><?php esc_html_e( 'Was soll mit dem Episodenbild geschehen?', 'podigee-rss-importer' ); ?></p>
+				</td>
+			</tr>
+
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Reihenfolge im Beitrag', 'podigee-rss-importer' ); ?></th>
+				<td>
+					<ul id="podigee-content-order" class="podigee-sortable">
+						<?php foreach ( $content_order as $key ) : ?>
+							<li data-key="<?php echo esc_attr( $key ); ?>">
+								<span class="dashicons dashicons-menu podigee-drag-handle"></span>
+								<label>
+									<input type="checkbox" name="content_order[]" value="<?php echo esc_attr( $key ); ?>" checked>
+									<?php echo esc_html( $block_labels[ $key ] ?? $key ); ?>
+								</label>
+							</li>
+						<?php endforeach; ?>
+						<?php foreach ( $disabled_keys as $key ) : ?>
+							<li data-key="<?php echo esc_attr( $key ); ?>" class="podigee-sortable-disabled">
+								<span class="dashicons dashicons-menu podigee-drag-handle"></span>
+								<label>
+									<input type="checkbox" name="content_order[]" value="<?php echo esc_attr( $key ); ?>">
+									<?php echo esc_html( $block_labels[ $key ] ?? $key ); ?>
+								</label>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+					<p class="description"><?php esc_html_e( 'Elemente per Checkbox aktivieren und per Drag & Drop sortieren.', 'podigee-rss-importer' ); ?></p>
 				</td>
 			</tr>
 

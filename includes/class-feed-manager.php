@@ -13,6 +13,9 @@ class Podigee_Feed_Manager {
 
 	const OPTION_KEY = 'podigee_rss_feeds';
 
+	const CONTENT_BLOCK_KEYS    = [ 'subtitle', 'image', 'player', 'description', 'shownotes' ];
+	const DEFAULT_CONTENT_ORDER = [ 'subtitle', 'image', 'player', 'description', 'shownotes' ];
+
 	/**
 	 * Return all configured feeds.
 	 *
@@ -204,6 +207,17 @@ class Podigee_Feed_Manager {
 			$ignored_guids = array_values( array_map( 'sanitize_text_field', $data['ignored_guids'] ) );
 		}
 
+		$content_order = self::DEFAULT_CONTENT_ORDER;
+		if ( ! empty( $data['content_order'] ) && is_array( $data['content_order'] ) ) {
+			$content_order = array_values( array_intersect(
+				array_map( 'sanitize_key', $data['content_order'] ),
+				self::CONTENT_BLOCK_KEYS
+			) );
+			if ( empty( $content_order ) ) {
+				$content_order = self::DEFAULT_CONTENT_ORDER;
+			}
+		}
+
 		return [
 			'id'               => sanitize_text_field( $data['id'] ?? '' ),
 			'name'             => sanitize_text_field( $data['name'] ?? '' ),
@@ -218,6 +232,7 @@ class Podigee_Feed_Manager {
 			'tag_ids'          => $tag_ids,
 			'last_run'         => absint( $data['last_run'] ?? 0 ),
 			'ignored_guids'    => $ignored_guids,
+			'content_order'    => $content_order,
 		];
 	}
 

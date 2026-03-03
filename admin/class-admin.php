@@ -92,7 +92,7 @@ class Podigee_Admin {
 		wp_enqueue_script(
 			'podigee-admin',
 			PODIGEE_RSS_PLUGIN_URL . 'admin/assets/admin.js',
-			[ 'jquery' ],
+			[ 'jquery', 'jquery-ui-sortable' ],
 			PODIGEE_RSS_VERSION,
 			true
 		);
@@ -184,6 +184,7 @@ class Podigee_Admin {
 			'image_mode'       => sanitize_key( $_POST['image_mode'] ?? 'none' ),
 			'category_ids'     => array_map( 'absint', (array) ( $_POST['category_ids'] ?? [] ) ),
 			'tag_ids'          => array_map( 'absint', (array) ( $_POST['tag_ids'] ?? [] ) ),
+			'content_order'    => array_map( 'sanitize_key', (array) ( $_POST['content_order'] ?? [] ) ),
 		];
 
 		$saved = $this->feed_manager->save( $data );

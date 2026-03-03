@@ -33,9 +33,11 @@ class Podigee_Post_Creator {
 			$inline_att_id = $this->sideload_image( 0, $episode['image_url'], $episode['title'] );
 		}
 
+		$content_order = $feed['content_order'] ?? [];
+
 		$post_data = [
 			'post_title'   => sanitize_text_field( $episode['title'] ),
-			'post_content' => $this->build_content( $episode, $inline_att_id ),
+			'post_content' => $this->build_content( $episode, $inline_att_id, $content_order ),
 			'post_excerpt' => sanitize_textarea_field( $episode['description'] ?? '' ),
 			'post_status'  => sanitize_key( $feed['post_status'] ),
 			'post_type'    => sanitize_key( $feed['post_type'] ),
@@ -121,72 +123,92 @@ class Podigee_Post_Creator {
 	/**
 	 * Build serialized Gutenberg block content for an episode.
 	 *
-	 * Block order:
-	 *   1. Subtitle    (itunes:subtitle, if present)
-	 *   2. Player      (styled audio card or Podigee embed)
-	 *   3. Description (plain-text summary)
-	 *   4. Shownotes   (full HTML body, parsed into semantic blocks)
+	 * Iterates over $content_order and calls the matching section builder.
 	 */
-	private function build_content( array $episode, int $image_attachment_id = 0 ): string {
+	private function build_content( array $episode, int $image_attachment_id = 0, array $content_order = [] ): string {
+		if ( empty( $content_order ) ) {
+			$content_order = Podigee_Feed_Manager::DEFAULT_CONTENT_ORDER;
+		}
+
 		$blocks = [];
+		foreach ( $content_order as $section ) {
+			$blocks = array_merge( $blocks, match ( $section ) {
+				'subtitle'    => $this->build_subtitle_blocks( $episode ),
+				'image'       => $this->build_image_blocks( $episode, $image_attachment_id ),
+				'player'      => $this->build_player_blocks( $episode ),
+				'description' => $this->build_description_blocks( $episode ),
+				'shownotes'   => $this->build_shownotes_blocks( $episode ),
+				default       => [],
+			} );
+		}
 
-		// --- 1. Subtitle ---
+		return serialize_blocks( $blocks );
+	}
+
+	private function build_subtitle_blocks( array $episode ): array {
 		$subtitle = trim( $episode['subtitle'] ?? '' );
-		if ( $subtitle !== '' ) {
-			$html     = '<p class="podigee-subtitle">' . esc_html( $subtitle ) . '</p>';
-			$blocks[] = $this->make_block( 'core/paragraph', [ 'className' => 'podigee-subtitle' ], $html );
+		if ( $subtitle === '' ) {
+			return [];
 		}
+		$html = '<p class="podigee-subtitle">' . esc_html( $subtitle ) . '</p>';
+		return [ $this->make_block( 'core/paragraph', [ 'className' => 'podigee-subtitle' ], $html ) ];
+	}
 
-		// --- 1b. Inline episode image ---
-		if ( $image_attachment_id > 0 ) {
-			$img_url = wp_get_attachment_url( $image_attachment_id );
-			if ( $img_url ) {
-				$html     = sprintf(
-					'<figure class="wp-block-image podigee-episode-image"><img src="%s" alt="%s" class="wp-image-%d"/></figure>',
-					esc_url( $img_url ),
-					esc_attr( $episode['title'] ?? '' ),
-					$image_attachment_id
-				);
-				$blocks[] = $this->make_block( 'core/image', [ 'id' => $image_attachment_id, 'className' => 'podigee-episode-image' ], $html );
-			}
+	private function build_image_blocks( array $episode, int $image_attachment_id ): array {
+		if ( $image_attachment_id <= 0 ) {
+			return [];
 		}
+		$img_url = wp_get_attachment_url( $image_attachment_id );
+		if ( ! $img_url ) {
+			return [];
+		}
+		$html = sprintf(
+			'<figure class="wp-block-image podigee-episode-image"><img src="%s" alt="%s" class="wp-image-%d"/></figure>',
+			esc_url( $img_url ),
+			esc_attr( $episode['title'] ?? '' ),
+			$image_attachment_id
+		);
+		return [ $this->make_block( 'core/image', [ 'id' => $image_attachment_id, 'className' => 'podigee-episode-image' ], $html ) ];
+	}
 
-		// --- 2. Player ---
+	private function build_player_blocks( array $episode ): array {
 		if ( ! empty( $episode['embed_url'] ) ) {
-			// Podigee iframe embed.
 			$embed_url = esc_url( $episode['embed_url'] );
 			$html      = sprintf(
 				'<div class="podigee-player podigee-player--embed"><iframe src="%s" frameborder="0" scrolling="no" allow="autoplay" loading="lazy"></iframe></div>',
 				$embed_url
 			);
-			$blocks[] = $this->make_block( 'core/html', [], $html );
-		} elseif ( ! empty( $episode['audio_url'] ) ) {
+			return [ $this->make_block( 'core/html', [], $html ) ];
+		}
+		if ( ! empty( $episode['audio_url'] ) ) {
 			$host       = wp_parse_url( home_url(), PHP_URL_HOST ) ?? '';
 			$audio_url  = esc_url( add_query_arg( 'source', $host, $episode['audio_url'] ) );
 			$inner_html = sprintf(
 				'<figure class="wp-block-audio"><audio controls preload="none" src="%s"></audio></figure>',
 				$audio_url
 			);
-			// className 'podigee-episode-player' marks the block for the
-			// render_block filter which wraps it in the styled card on the frontend.
-			$blocks[] = $this->make_block(
+			return [ $this->make_block(
 				'core/audio',
 				[ 'src' => $audio_url, 'className' => 'podigee-episode-player' ],
 				$inner_html
-			);
+			) ];
 		}
+		return [];
+	}
 
-		// --- 3. Description ---
+	private function build_description_blocks( array $episode ): array {
 		$description = trim( $episode['description'] ?? '' );
-		if ( $description !== '' ) {
-			$html     = '<p class="podigee-description">' . esc_html( $description ) . '</p>';
-			$blocks[] = $this->make_block( 'core/paragraph', [ 'className' => 'podigee-description' ], $html );
+		if ( $description === '' ) {
+			return [];
 		}
+		$html = '<p class="podigee-description">' . esc_html( $description ) . '</p>';
+		return [ $this->make_block( 'core/paragraph', [ 'className' => 'podigee-description' ], $html ) ];
+	}
 
-		// --- 4. Shownotes ---
+	private function build_shownotes_blocks( array $episode ): array {
 		$body = wp_kses_post( $episode['content'] );
-		// Remove leading subtitle from shownotes to avoid duplication.
-		// The subtitle may appear as bare text or wrapped in a <p> tag.
+
+		$subtitle = trim( $episode['subtitle'] ?? '' );
 		if ( $subtitle !== '' ) {
 			$quoted = preg_quote( $subtitle, '/' );
 			$body   = preg_replace(
@@ -196,13 +218,14 @@ class Podigee_Post_Creator {
 				1
 			);
 		}
-		if ( ! empty( trim( $body ) ) ) {
-			$heading_html = '<h2>' . esc_html__( 'Shownotes', 'podigee-rss-importer' ) . '</h2>';
-			$blocks[]     = $this->make_block( 'core/heading', [ 'level' => 2 ], $heading_html );
-			$blocks       = array_merge( $blocks, $this->html_to_blocks( $body ) );
+
+		if ( empty( trim( $body ) ) ) {
+			return [];
 		}
 
-		return serialize_blocks( $blocks );
+		$heading_html = '<h2>' . esc_html__( 'Shownotes', 'podigee-rss-importer' ) . '</h2>';
+		$blocks       = [ $this->make_block( 'core/heading', [ 'level' => 2 ], $heading_html ) ];
+		return array_merge( $blocks, $this->html_to_blocks( $body ) );
 	}
 
 	// =========================================================================
