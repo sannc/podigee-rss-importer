@@ -27,6 +27,7 @@ $feed = wp_parse_args( $feed ?? [], [
 	'use_episode_date' => false,
 	'update_existing'  => false,
 	'cron_schedule'    => 'never',
+	'image_mode'       => 'none',
 	'category_ids'     => [],
 	'tag_ids'          => [],
 ] );
@@ -137,6 +138,21 @@ $tags       = get_tags( [ 'hide_empty' => false ] );
 						<option value="daily" <?php selected( $feed['cron_schedule'], 'daily' ); ?>><?php esc_html_e( 'Täglich', 'podigee-rss-importer' ); ?></option>
 						<option value="weekly" <?php selected( $feed['cron_schedule'], 'weekly' ); ?>><?php esc_html_e( 'Wöchentlich', 'podigee-rss-importer' ); ?></option>
 					</select>
+				</td>
+			</tr>
+
+			<tr>
+				<th scope="row">
+					<label for="podigee-image-mode"><?php esc_html_e( 'Episodenbild', 'podigee-rss-importer' ); ?></label>
+				</th>
+				<td>
+					<select id="podigee-image-mode" name="image_mode">
+						<option value="none" <?php selected( $feed['image_mode'], 'none' ); ?>><?php esc_html_e( 'Nein', 'podigee-rss-importer' ); ?></option>
+						<option value="featured" <?php selected( $feed['image_mode'], 'featured' ); ?>><?php esc_html_e( 'Als Featured Image', 'podigee-rss-importer' ); ?></option>
+						<option value="inline" <?php selected( $feed['image_mode'], 'inline' ); ?>><?php esc_html_e( 'Als Bild im Artikel', 'podigee-rss-importer' ); ?></option>
+						<option value="media_only" <?php selected( $feed['image_mode'], 'media_only' ); ?>><?php esc_html_e( 'Nur in die Mediathek', 'podigee-rss-importer' ); ?></option>
+					</select>
+					<p class="description"><?php esc_html_e( 'Was soll mit dem Episodenbild geschehen?', 'podigee-rss-importer' ); ?></p>
 				</td>
 			</tr>
 

@@ -164,9 +164,10 @@ class Podigee_Feed_Manager {
 	 * Sanitize and apply defaults to a feed config array.
 	 */
 	private function sanitize( array $data ): array {
-		$allowed_schedules  = [ 'never', 'hourly', 'twicedaily', 'daily', 'weekly' ];
-		$allowed_post_types = get_post_types( [ 'public' => true ] );
-		$allowed_statuses   = [ 'publish', 'draft' ];
+		$allowed_schedules   = [ 'never', 'hourly', 'twicedaily', 'daily', 'weekly' ];
+		$allowed_post_types  = get_post_types( [ 'public' => true ] );
+		$allowed_statuses    = [ 'publish', 'draft' ];
+		$allowed_image_modes = [ 'none', 'featured', 'inline', 'media_only' ];
 
 		$post_type = sanitize_key( $data['post_type'] ?? 'post' );
 		if ( ! in_array( $post_type, $allowed_post_types, true ) ) {
@@ -181,6 +182,11 @@ class Podigee_Feed_Manager {
 		$cron_schedule = sanitize_key( $data['cron_schedule'] ?? 'never' );
 		if ( ! in_array( $cron_schedule, $allowed_schedules, true ) ) {
 			$cron_schedule = 'never';
+		}
+
+		$image_mode = sanitize_key( $data['image_mode'] ?? 'none' );
+		if ( ! in_array( $image_mode, $allowed_image_modes, true ) ) {
+			$image_mode = 'none';
 		}
 
 		$category_ids = [];
@@ -207,6 +213,7 @@ class Podigee_Feed_Manager {
 			'use_episode_date' => ! empty( $data['use_episode_date'] ),
 			'update_existing'  => ! empty( $data['update_existing'] ),
 			'cron_schedule'    => $cron_schedule,
+			'image_mode'       => $image_mode,
 			'category_ids'     => $category_ids,
 			'tag_ids'          => $tag_ids,
 			'last_run'         => absint( $data['last_run'] ?? 0 ),

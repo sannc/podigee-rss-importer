@@ -25,9 +25,17 @@ class Podigee_Post_Creator {
 			$post_date = gmdate( 'Y-m-d H:i:s', $episode['pub_date'] );
 		}
 
+		$image_mode    = $feed['image_mode'] ?? 'none';
+		$inline_att_id = 0;
+
+		// For inline mode, we need the attachment ID before building content.
+		if ( $image_mode === 'inline' && ! empty( $episode['image_url'] ) ) {
+			$inline_att_id = $this->sideload_image( 0, $episode['image_url'], $episode['title'] );
+		}
+
 		$post_data = [
 			'post_title'   => sanitize_text_field( $episode['title'] ),
-			'post_content' => $this->build_content( $episode ),
+			'post_content' => $this->build_content( $episode, $inline_att_id ),
 			'post_excerpt' => sanitize_textarea_field( $episode['description'] ?? '' ),
 			'post_status'  => sanitize_key( $feed['post_status'] ),
 			'post_type'    => sanitize_key( $feed['post_type'] ),
@@ -79,9 +87,28 @@ class Podigee_Post_Creator {
 			wp_set_post_tags( $post_id, array_map( 'sanitize_text_field', $episode['keywords'] ), true );
 		}
 
-		// --- Featured Image ---
-		if ( ! empty( $episode['image_url'] ) && ! has_post_thumbnail( $post_id ) ) {
-			$this->maybe_set_thumbnail( $post_id, $episode['image_url'], $episode['title'] );
+		// --- Episode Image ---
+		if ( ! empty( $episode['image_url'] ) ) {
+			switch ( $image_mode ) {
+				case 'featured':
+					if ( ! has_post_thumbnail( $post_id ) ) {
+						$this->maybe_set_thumbnail( $post_id, $episode['image_url'], $episode['title'] );
+					}
+					break;
+
+				case 'inline':
+					// Attachment was sideloaded before insert; re-attach to post.
+					if ( $inline_att_id > 0 ) {
+						wp_update_post( [ 'ID' => $inline_att_id, 'post_parent' => $post_id ] );
+					}
+					break;
+
+				case 'media_only':
+					$this->sideload_image( $post_id, $episode['image_url'], $episode['title'] );
+					break;
+
+				// 'none' — do nothing.
+			}
 		}
 
 		return $post_id;
@@ -100,7 +127,7 @@ class Podigee_Post_Creator {
 	 *   3. Description (plain-text summary)
 	 *   4. Shownotes   (full HTML body, parsed into semantic blocks)
 	 */
-	private function build_content( array $episode ): string {
+	private function build_content( array $episode, int $image_attachment_id = 0 ): string {
 		$blocks = [];
 
 		// --- 1. Subtitle ---
@@ -108,6 +135,20 @@ class Podigee_Post_Creator {
 		if ( $subtitle !== '' ) {
 			$html     = '<p class="podigee-subtitle">' . esc_html( $subtitle ) . '</p>';
 			$blocks[] = $this->make_block( 'core/paragraph', [ 'className' => 'podigee-subtitle' ], $html );
+		}
+
+		// --- 1b. Inline episode image ---
+		if ( $image_attachment_id > 0 ) {
+			$img_url = wp_get_attachment_url( $image_attachment_id );
+			if ( $img_url ) {
+				$html     = sprintf(
+					'<figure class="wp-block-image podigee-episode-image"><img src="%s" alt="%s" class="wp-image-%d"/></figure>',
+					esc_url( $img_url ),
+					esc_attr( $episode['title'] ?? '' ),
+					$image_attachment_id
+				);
+				$blocks[] = $this->make_block( 'core/image', [ 'id' => $image_attachment_id, 'className' => 'podigee-episode-image' ], $html );
+			}
 		}
 
 		// --- 2. Player ---
@@ -290,9 +331,14 @@ class Podigee_Post_Creator {
 	}
 
 	/**
-	 * Download and set a featured image for a post.
+	 * Download an image into the media library.
+	 *
+	 * @param int    $post_id   Post to attach to (0 = unattached).
+	 * @param string $image_url Remote image URL.
+	 * @param string $title     Image title / alt text.
+	 * @return int Attachment ID, or 0 on failure.
 	 */
-	private function maybe_set_thumbnail( int $post_id, string $image_url, string $title ): void {
+	private function sideload_image( int $post_id, string $image_url, string $title ): int {
 		if ( ! function_exists( 'media_sideload_image' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/media.php';
 			require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -301,7 +347,16 @@ class Podigee_Post_Creator {
 
 		$attachment_id = media_sideload_image( $image_url, $post_id, sanitize_text_field( $title ), 'id' );
 
-		if ( ! is_wp_error( $attachment_id ) && $attachment_id > 0 ) {
+		return ( ! is_wp_error( $attachment_id ) && $attachment_id > 0 ) ? $attachment_id : 0;
+	}
+
+	/**
+	 * Download and set a featured image for a post.
+	 */
+	private function maybe_set_thumbnail( int $post_id, string $image_url, string $title ): void {
+		$attachment_id = $this->sideload_image( $post_id, $image_url, $title );
+
+		if ( $attachment_id > 0 ) {
 			set_post_thumbnail( $post_id, $attachment_id );
 		}
 	}

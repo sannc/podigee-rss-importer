@@ -181,6 +181,7 @@ class Podigee_Admin {
 			'use_episode_date' => ! empty( $_POST['use_episode_date'] ),
 			'update_existing'  => ! empty( $_POST['update_existing'] ),
 			'cron_schedule'    => sanitize_key( $_POST['cron_schedule'] ?? 'never' ),
+			'image_mode'       => sanitize_key( $_POST['image_mode'] ?? 'none' ),
 			'category_ids'     => array_map( 'absint', (array) ( $_POST['category_ids'] ?? [] ) ),
 			'tag_ids'          => array_map( 'absint', (array) ( $_POST['tag_ids'] ?? [] ) ),
 		];
