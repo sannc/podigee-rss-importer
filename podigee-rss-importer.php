@@ -77,28 +77,28 @@ add_action( 'plugins_loaded', function () {
 	// Boot cron manager (registers hooks).
 	new Podigee_Cron_Manager();
 
-	// Enqueue frontend player: Plyr.js (bundled) + wrapper styles.
+	// Register frontend player assets (enqueued lazily in render_block filters).
 	add_action( 'wp_enqueue_scripts', function () {
-		wp_enqueue_style(
+		wp_register_style(
 			'plyr',
 			PODIGEE_RSS_PLUGIN_URL . 'public/assets/plyr/plyr.css',
 			[],
 			'3.8.4'
 		);
-		wp_enqueue_script(
+		wp_register_script(
 			'plyr',
 			PODIGEE_RSS_PLUGIN_URL . 'public/assets/plyr/plyr.min.js',
 			[],
 			'3.8.4',
 			true
 		);
-		wp_enqueue_style(
+		wp_register_style(
 			'podigee-player',
 			PODIGEE_RSS_PLUGIN_URL . 'public/assets/player.css',
 			[ 'plyr' ],
 			PODIGEE_RSS_VERSION
 		);
-		wp_enqueue_script(
+		wp_register_script(
 			'podigee-player',
 			PODIGEE_RSS_PLUGIN_URL . 'public/assets/player.js',
 			[ 'plyr' ],
@@ -118,6 +118,9 @@ add_action( 'plugins_loaded', function () {
 		if ( ! $post_id || ! get_post_meta( $post_id, '_podigee_feed_id', true ) ) {
 			return $block_content;
 		}
+		wp_enqueue_style( 'podigee-player' );
+		wp_enqueue_script( 'podigee-player' );
+
 		return preg_replace(
 			'/(<figure\b[^>]*class=")/',
 			'$1podigee-featured-image ',
@@ -135,6 +138,9 @@ add_action( 'plugins_loaded', function () {
 		if ( ! str_contains( $class, 'podigee-episode-player' ) ) {
 			return $block_content;
 		}
+
+		wp_enqueue_style( 'podigee-player' );
+		wp_enqueue_script( 'podigee-player' );
 
 		$post_id   = get_the_ID();
 		$ep_number = $post_id ? get_post_meta( $post_id, '_podigee_episode_number', true ) : '';

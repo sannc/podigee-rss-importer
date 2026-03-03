@@ -25,7 +25,7 @@
 	document.querySelectorAll( '.podigee-featured-image' ).forEach( function ( fig ) {
 		// Prefer a player inside the same article / post container; fall back to
 		// the first player on the page (covers the common single-post layout).
-		var scope   = fig.closest( 'article, .hentry, .post' ) || document.body;
+		var scope   = fig.closest( 'article, .hentry, .post, .entry, .blog-post, [class*="post-"]' ) || document.body;
 		var audioEl = scope.querySelector( '.podigee-episode-player audio' )
 		           || document.querySelector( '.podigee-episode-player audio' );
 
