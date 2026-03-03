@@ -24,6 +24,18 @@ define( 'PODIGEE_RSS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'PODIGEE_RSS_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
 /**
+ * GitHub-based auto-updates via Plugin Update Checker.
+ */
+require_once PODIGEE_RSS_PLUGIN_DIR . 'vendor/plugin-update-checker/plugin-update-checker.php';
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+PucFactory::buildUpdateChecker(
+	'https://github.com/sannc/podigee-rss-importer/',
+	__FILE__,
+	'podigee-rss-importer'
+);
+
+/**
  * Autoloader for plugin classes.
  */
 spl_autoload_register( function ( string $class_name ) {

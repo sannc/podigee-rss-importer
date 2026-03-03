@@ -14,6 +14,7 @@ A WordPress plugin that imports Podigee podcast RSS feeds as WordPress posts. Mu
 - **Per-feed settings** – post type, post status, categories, tags, date handling, update mode
 - **Configurable content order** – drag & drop to reorder and toggle content blocks (subtitle, image, player, description, shownotes) per feed
 - **Multilingual** – German source strings with English (en_US) translation included
+- **Auto-updates from GitHub** – new releases are detected automatically in the WordPress dashboard
 
 ## Requirements
 
@@ -81,7 +82,7 @@ The audio player card uses CSS custom properties. Override them in your theme's 
 
 ```
 podigee-rss-importer/
-├── podigee-rss-importer.php      # Bootstrap, autoloader, frontend hooks
+├── podigee-rss-importer.php      # Bootstrap, autoloader, auto-updater, frontend hooks
 ├── includes/
 │   ├── class-feed-manager.php   # Feed CRUD (stored in wp_options), content order constants
 │   ├── class-rss-parser.php     # SimplePie-based RSS parsing
@@ -104,6 +105,8 @@ podigee-rss-importer/
 │   └── plyr/
 │       ├── plyr.min.js          # Plyr 3.8.4 (bundled)
 │       └── plyr.css             # Plyr 3.8.4 styles (bundled)
+├── vendor/
+│   └── plugin-update-checker/          # GitHub auto-update library (PUC v5)
 └── languages/
     ├── podigee-rss-importer.pot        # Translation template
     ├── podigee-rss-importer-en_US.po   # English translation (source)
