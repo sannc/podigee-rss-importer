@@ -3,7 +3,7 @@
  * Plugin Name: Podigee RSS Importer
  * Plugin URI:  https://github.com/sannc/podigee-rss-importer
  * Description: Importiert Podigee-Podcast-RSS-Feeds als WordPress-Posts. Unterstützt mehrere Feeds, konfigurierbar pro Feed.
- * Version:     0.1
+ * Version:     0.2
  * Requires at least: 6.0
  * Requires PHP: 8.0
  * Author:      Carsten Sann
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'PODIGEE_RSS_VERSION', '0.1' );
+define( 'PODIGEE_RSS_VERSION', '0.2' );
 define( 'PODIGEE_RSS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PODIGEE_RSS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'PODIGEE_RSS_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
